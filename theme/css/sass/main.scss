@@ -1,3 +1,7 @@
+// Import
+@import url('https://fonts.googleapis.com/css2?family=Mukta&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 // Variables
 $primary-color: #0075FF;
 $primary-color-dark: darken($primary-color, 10);
@@ -14,18 +18,19 @@ $background-color-dark: darken($background-color, 10);
 // Base
 body {
     background-color: $background-color;
+    font-family: 'Mukta', sans-serif;
 }
 
 // Navbar
-.navbar {
+.main-navbar {
     background-color: $background-color;
     @include box-shadow();
 }
 
-.navbar-light {
+.main-navbar.navbar-light {
     .navbar-brand {
         color: $primary-color;
-        font-weight: bold;
+        font-family: 'Press Start 2P', cursive;
         transition: 0.2s;
     
         &:hover {
@@ -42,6 +47,21 @@ body {
             font-weight: 500;
         }
     }
-
 }
 
+// Hero
+.hero {
+    background-image: url("../img/codersaurus-rex-hero.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include box-shadow();
+
+    .container {
+        height: 50vh;
+    }
+
+    h1 {
+        font-family: 'Press Start 2P', cursive;
+    }
+}
