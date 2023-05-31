@@ -191,4 +191,15 @@ body {
             margin: 1em auto;
         }
     }
+
+    &__aside {
+        .card {
+            background-color: $primary-color;
+            transition: 0.2s;
+
+            &:hover {
+                background-color: $primary-color-dark;
+            }
+        }
+    }
 }
