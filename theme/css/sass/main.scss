@@ -163,3 +163,32 @@ body {
         font-size: 1.25em;
     }
 }
+
+// Header post
+.post {
+
+    &__header {
+        img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+    
+        h2 {
+            color: $primary-color;
+        }
+    }
+
+    &__content {
+        h2, h3, h4, h5, h6 {
+            color: $primary-color-dark;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        img {
+            display: block;
+            margin: 1em auto;
+        }
+    }
+}

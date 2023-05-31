@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Codersaurus Rex</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="main-navbar navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand mx-auto" href="#">Codersaurus Rex</a>
+          <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="main-navbar__link nav-link active" aria-current="page" href="#">Accueil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Connexion</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Sujets
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">HTML</a></li>
+                  <li><a class="dropdown-item" href="#">CSS</a></li>
+                  <li><a class="dropdown-item" href="#">JavaScript</a></li>
+                  <li><a class="dropdown-item" href="#">PHP</a></li>
+                  <li><a class="dropdown-item" href="#">Python</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Emploi</a></li>
+                  <li><a class="dropdown-item" href="#">Reconversion</a></li>
+                  <li><a class="dropdown-item" href="#">Études de cas</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container py-3">
+        <!-- Header -->
+        <header class="post__header d-flex flex-column text-center">
+            <h1>Comment centrer une Div ?</h1>
+            <img src="./img/author.webp" class="img-thumbnail rounded-circle mx-auto" alt="Auteur de l'article">
+            <h2 class="fw-bold">John Doe</h2>
+            <h3 class="text-muted fw-lighter fst-italic">Développeur Symfony</h3>
+            <hr>
+            <aside class="d-flex flex-row align-items-center justify-content-between text-muted fst-italic fs-5">
+                <p>HTML, CSS</p>
+                <p>Le 24 Mars 2023</p>
+            </aside>
+        </header>
+        <!-- Main -->
+        <main class="post__main">
+            <div class="row">
+                <div class="post__content col-12 col-md-9 fs-5">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur laudantium necessitatibus, pariatur voluptatum quae saepe incidunt. Adipisci deleniti possimus modi tempora iusto, inventore ut dolorem, sunt nostrum dolore beatae eaque.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatum placeat ea dolor temporibus labore ipsam molestias non, laboriosam saepe architecto nobis delectus exercitationem ullam porro deleniti corrupti asperiores aliquam?</p>
+                    <img src="https://picsum.photos/500" class="img-fluid" alt="Image">
+                    <h2>C'est très difficile !</h2>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius delectus corrupti accusamus recusandae commodi pariatur rerum. Suscipit voluptas adipisci fugiat laboriosam vel magnam similique quas, atque, quam voluptatem praesentium illo.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores recusandae, tempore quia ea aliquam neque, cupiditate sint nesciunt molestiae necessitatibus adipisci. Nam consequatur dolor ipsa quasi dicta veritatis eligendi ducimus!</p>
+                    <img src="https://picsum.photos/250" class="img-fluid" alt="Image">
+                    <h2>Utiliser les arts et arcanes du CSS</h2>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum quasi quia non, consectetur tempora quae nihil alias id aliquam. Accusantium corporis maiores nulla exercitationem nam quae architecto alias. Maiores, officia.</p>
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quod totam laborum nisi numquam distinctio nemo ullam eius qui temporibus dignissimos reiciendis magnam cum, maiores quaerat, deleniti in fugiat iure.</p>
+                    <h2>Quelques mots pour terminer</h2>
+                    <code>
+                        div { margin: 0 auto; }                   
+                    </code>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis nobis id reiciendis, odio deserunt velit sit corporis, consectetur debitis rerum totam, maxime suscipit eveniet alias accusamus qui reprehenderit consequuntur dolores.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis quod totam provident id impedit fugit animi, quam distinctio temporibus doloribus eius. Exercitationem in totam aperiam velit ducimus quae nihil harum.</p>
+                </div>
+            </div>
+        </main>
+
+      </div>
+      
+      <!-- Footer -->
+      <footer class="footer text-light">
+        <div class="container py-5">
+          <div class="row">
+            <div class="col 12 col-md-6 text-center">
+              <h2>Codersaurus Rex</h2>
+            </div>
+            <div class="col-12 col-md-6 d-flex flex-row flex-wrap justify-content-around my-3 my-md-0">
+              <a class="text-light text-decoration-none fw-bold" href="mailto:contact@codersaurus-rex.fr">contact@codersaurus-rex.fr</a>
+              <a class="text-light text-decoration-none fw-bold" href="#">Twitter</a>
+              <a class="text-light text-decoration-none fw-bold" href="#">LinkedIn</a>
+            </div>
+          </div>
+          <hr>
+          <div class="d-flex flex-row justify-content-around align-items-center flex-wrap">
+            <a class="text-light text-decoration-none" href="#">Mentions légales</a>
+            <a class="text-light text-decoration-none" href="#">Politique de confidentialité</a>
+            <a class="text-light text-decoration-none" href="#">À propos de Codersaurus Rex</a>
+          </div>
+        </div>
+        <div class="text-center">
+          <small>@Lucas Piedagnel</small>
+        </div>
+      </footer>
+</body>
+</html>
