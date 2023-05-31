@@ -153,3 +153,13 @@ body {
         }
     }
 }
+
+// Footer
+.footer {
+    background-color: $primary-color;
+
+    h2 {
+        font-family: 'Press Start 2P', cursive;
+        font-size: 1.25em;
+    }
+}
