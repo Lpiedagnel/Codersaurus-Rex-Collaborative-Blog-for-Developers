@@ -1,0 +1,32 @@
+// Navbar
+.main-navbar {
+    background-color: $background-color;
+    @include box-shadow();
+}
+
+.main-navbar.navbar-light {
+    .navbar-brand {
+        color: $primary-color;
+        font-family: 'Press Start 2P', cursive;
+        transition: 0.2s;
+        font-size: 1.25em;
+
+        @include mobile {
+            font-size: 0.8em;
+        }
+    
+        &:hover {
+            color: $primary-color-dark;
+        }
+    }
+
+    .navbar-nav {
+        .nav-link.active {
+            color: $primary-color-dark;
+        }
+        .nav-link {
+            color: $primary-color;
+            font-weight: 700;
+        }
+    }
+}

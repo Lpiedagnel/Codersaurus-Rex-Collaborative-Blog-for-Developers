@@ -1,0 +1,28 @@
+// Hero
+.hero {
+    background-image: url("../../../public/images/codersaurus-rex-hero.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include box-shadow();
+
+    .container {
+        height: 50vh;
+    }
+
+    h1 {
+        font-family: 'Press Start 2P', cursive;
+
+        @include mobile {
+            font-size: 1.2em;
+        }
+    }
+
+    h2 {
+        font-size: 1.2em;
+
+        @include mobile {
+            font-size: 1em;
+        }
+    }
+}

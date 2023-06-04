@@ -1,49 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-    <script src="{{ asset('js/main.js') }}"></script>
-    <title>Codersaurus Rex</title>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="main-navbar navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-          <a class="navbar-brand mx-auto" href="./index.html">Codersaurus Rex</a>
-          <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="main-navbar__link nav-link active" aria-current="page" href="#">Accueil</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Connexion</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Sujets
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">HTML</a></li>
-                  <li><a class="dropdown-item" href="#">CSS</a></li>
-                  <li><a class="dropdown-item" href="#">JavaScript</a></li>
-                  <li><a class="dropdown-item" href="#">PHP</a></li>
-                  <li><a class="dropdown-item" href="#">Python</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Emploi</a></li>
-                  <li><a class="dropdown-item" href="#">Reconversion</a></li>
-                  <li><a class="dropdown-item" href="#">Études de cas</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+{% extends "base.html.twig" %}
+
+{% block body %}
       <!-- Hero Img -->
       <div class="hero">
         <div class="container text-light d-flex flex-column justify-content-center align-items-center text-center">
@@ -75,9 +32,9 @@
         <div class="row mt-5">
           <!-- Single article -->
           <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="./post.html" class="card-link text-decoration-none">
+            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
               <div class="card">
-                <img src="./img/article-1.webp" class="card-img-top" alt="...">
+                <img src="./images/article-1.webp" class="card-img-top" alt="...">
                 <div class="card-body">
                   <h5 class="card-title">Comment centrer une div ?</h5>
                   <p class="card-text">Le cauchemar de tous les développeurs ! Comment faire pour exécuter une action aussi difficile ? On vous explique tout ici !</p>
@@ -95,9 +52,9 @@
           </div>
           <!-- Single article -->
           <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="./post.html" class="card-link text-decoration-none">
+            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
               <div class="card">
-                <img src="./img/article-2.webp" class="card-img-top" alt="...">
+                <img src="./images/article-2.webp" class="card-img-top" alt="...">
                 <div class="card-body">
                   <h5 class="card-title">Comment coder un réseau social ?</h5>
                   <p class="card-text">Utilisez PHP et Symfony pour coder le nouveau Facebook !</p>
@@ -117,9 +74,9 @@
           </div>
           <!-- Single article -->
           <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="./post.html" class="card-link text-decoration-none">
+            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
               <div class="card">
-                <img src="./img/article-3.webp" class="card-img-top" alt="...">
+                <img src="./images/article-3.webp" class="card-img-top" alt="...">
                 <div class="card-body">
                   <h5 class="card-title">Trouver un emploi en tant que Dev Junior</h5>
                   <p class="card-text">Avec un marché saturé de développeurs juniors, comment faire pour se démarquer ?</p>
@@ -137,9 +94,9 @@
           </div>
           <!-- Single article -->
           <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="./post.html" class="card-link text-decoration-none">
+            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
               <div class="card">
-                <img src="./img/article-4.webp" class="card-img-top" alt="...">
+                <img src="./images/article-4.webp" class="card-img-top" alt="...">
                 <div class="card-body">
                   <h5 class="card-title">Les développeurs nomades</h5>
                   <p class="card-text">Grâce au télétravail, vous pouvez voyager à travers le monde !</p>
@@ -160,29 +117,4 @@
           <a href="#" class="fw-bold text-decoration-none fs-5">Plus d'articles &#10132;</a>
         </div>
       </main>
-      <!-- Footer -->
-      <footer class="footer text-light">
-        <div class="container py-5">
-          <div class="row">
-            <div class="col 12 col-md-6 text-center">
-              <h2>Codersaurus Rex</h2>
-            </div>
-            <div class="col-12 col-md-6 d-flex flex-row flex-wrap justify-content-around my-3 my-md-0">
-              <a class="text-light text-decoration-none fw-bold" href="mailto:contact@codersaurus-rex.fr">contact@codersaurus-rex.fr</a>
-              <a class="text-light text-decoration-none fw-bold" href="#">Twitter</a>
-              <a class="text-light text-decoration-none fw-bold" href="#">LinkedIn</a>
-            </div>
-          </div>
-          <hr>
-          <div class="d-flex flex-row justify-content-around align-items-center flex-wrap">
-            <a class="text-light text-decoration-none" href="#">Mentions légales</a>
-            <a class="text-light text-decoration-none" href="#">Politique de confidentialité</a>
-            <a class="text-light text-decoration-none" href="#">À propos de Codersaurus Rex</a>
-          </div>
-        </div>
-        <div class="text-center">
-          <small>@Lucas Piedagnel</small>
-        </div>
-      </footer>
-</body>
-</html>
+{% endblock %}
