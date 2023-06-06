@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="container my-4 col-12 col-md-6 col-lg-4">
+        <h1>S'inscrire sur Codersaurus Rex</h1>
+
+        {{ form_start(registrationForm, {
+            attr: {
+                class: 'auth-form p-4'
+            }
+        }) }}
+
+            {# Email #}
+            <div class="mb-4">
+                {{ form_label(registrationForm.email, 'Email', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(registrationForm.email, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre addresse email'
+                    }
+                }) }}
+                {{ form_help(registrationForm.email, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(registrationForm.email) %}
+                    <div class="text-danger">{{ form_errors(registrationForm.email) }}</div>
+                {% endif %}
+            </div>
+
+            {# Pseudo #}
+            <div class="mb-4">
+                {{ form_label(registrationForm.username, 'Pseudo', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(registrationForm.username, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre super pseudo'
+                    }
+                }) }}
+                {{ form_help(registrationForm.username, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(registrationForm.username) %}
+                    <div class="text-danger">{{ form_errors(registrationForm.username) }}</div>
+                {% endif %}
+            </div>
+
+            {# Password #}
+            <div class="mb-4">
+                {{ form_label(registrationForm.plainPassword, 'Mot de passe', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(registrationForm.plainPassword, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre mot de passe top secret'
+                    }
+                }) }}
+                {{ form_help(registrationForm.plainPassword, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(registrationForm.plainPassword) %}
+                    <div class="text-danger">{{ form_errors(registrationForm.plainPassword) }}</div>
+                {% endif %}
+                
+            </div>
+
+            {# RGPD #}
+            <div class="mb-4">
+                {{ form_label(registrationForm.agreeTerms, 'Acceptez la politique de confidentialité', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(registrationForm.agreeTerms, {
+                    attr: {
+                        'class': 'form-check-input mx-3'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(registrationForm.agreeTerms) %}
+                    <div class="text-danger">{{ form_errors(registrationForm.agreeTerms) }}</div>
+                {% endif %}
+            </div>
+
+            {# Submit #}
+            <div class="mb-4">
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            </div>
+
+        {{ form_end(registrationForm) }}
+
+    </div>
+{% endblock %}

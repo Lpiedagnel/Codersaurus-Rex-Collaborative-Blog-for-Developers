@@ -7,3 +7,4 @@ $text-color: #000000;
 
 $background-color: #fafafa;
 $background-color-dark: darken($background-color, 10);
+$background-color-light: lighten($background-color, 10);
