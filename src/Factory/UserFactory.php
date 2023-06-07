@@ -4,6 +4,8 @@ namespace App\Factory;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeImmutable;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -77,7 +79,9 @@ final class UserFactory extends ModelFactory
             'email' => $email,
             'password' => 'test',
             'roles' => [],
-            'username' => $username
+            'username' => $username,
+            'createdAt' => new DateTimeImmutable(),
+            'avatar_link' => 'public/uploads/avatars/default_avatar.webp'
         ];
     }
 
