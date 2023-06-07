@@ -4,13 +4,14 @@
 
 {% block body %}
     <div class="container my-4 col-12 col-md-6 col-lg-4">
-        <h1>S'inscrire sur Codersaurus Rex</h1>
 
         {{ form_start(registrationForm, {
             attr: {
                 class: 'auth-form p-4'
             }
         }) }}
+
+            <h1>S'inscrire sur Codersaurus Rex</h1>
 
             {# Email #}
             <div class="mb-4">
@@ -87,7 +88,7 @@
 
             {# RGPD #}
             <div class="mb-4">
-                {{ form_label(registrationForm.agreeTerms, 'Acceptez la politique de confidentialité', {
+                {{ form_label(registrationForm.agreeTerms, 'J\'accepte la politique de confidentialité', {
                     label_attr: {
                         class: 'form-label'
                     }
@@ -104,8 +105,10 @@
             </div>
 
             {# Submit #}
-            <div class="mb-4">
-                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            <div class="mb-4 d-flex flex-column flex-lg-row justify-content-between align-items-center">
+                <button type="submit" class="btn btn-primary mb-3 mb-lg-0">S'inscrire</button>
+                <p>Déjà un compte ? <a href="{{ path('app_login') }}">Connecte-vous !</a></p>
+
             </div>
 
         {{ form_end(registrationForm) }}
