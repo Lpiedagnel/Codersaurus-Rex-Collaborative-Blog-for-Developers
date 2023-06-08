@@ -49,6 +49,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar_link = null;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->avatar_link = "/uploads/avatars/default_avatar.webp";
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -162,7 +168,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->createdAt = new DateTime();
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -186,7 +192,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setAvatarLink(string $avatar_link): self
     {
-        $this->avatar_link = "public/uploads/avatars/default_avatar.webp";
+        $this->avatar_link = $avatar_link;
 
         return $this;
     }

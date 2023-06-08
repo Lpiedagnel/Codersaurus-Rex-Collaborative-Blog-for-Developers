@@ -3,7 +3,22 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-    <p>
-        {{ user.password }}
-    </p>
+    <div class="container my-5">
+        <div class="row card">
+            <img src="{{ user.avatar_link }}" alt="Avatar de {{ user.username }}" class="col-12 col-md-6 col-lg-4">
+            <div class="col-12 col-md-6 col-lg-8">
+                <h1>{{ user.username }}</h1>
+                {% if user.job %}
+                    <h2>{{ user.job }}</h2>
+                {% endif %}
+
+                <p>Inscrit le {{ user.createdAt|date("d/m/Y", "Europe/Paris") }}</p>
+
+                {% if user.bio %}
+                    <p>{{ user.bio }}</p>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
 {% endblock %}

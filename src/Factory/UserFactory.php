@@ -78,10 +78,7 @@ final class UserFactory extends ModelFactory
         return [
             'email' => $email,
             'password' => 'test',
-            'roles' => [],
             'username' => $username,
-            'createdAt' => new DateTimeImmutable(),
-            'avatar_link' => 'public/uploads/avatars/default_avatar.webp'
         ];
     }
 

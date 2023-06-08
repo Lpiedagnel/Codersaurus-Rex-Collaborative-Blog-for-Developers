@@ -1,6 +1,7 @@
 // Navbar
 .main-navbar {
     background-color: $background-color;
+    z-index: 1100;
     @include box-shadow();
 }
 

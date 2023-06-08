@@ -13,13 +13,13 @@ class UserController extends AbstractController
     #[Route('/user/{id}', name: 'app_user_show')]
     public function index(User $userData): Response
     {
-        dd($userData);
-
         $user = [
-            'username' => $userData['username'],
-            'job' => $userData['job'],
-            'bio' => $userData['bio']
-
+            'username' => $userData->getUsername(),
+            'job' => $userData->getJob(),
+            'bio' => $userData->getBio(),
+            'createdAt' => $userData->getCreatedAt(),
+            'birthday' => $userData->getBirthday(),
+            'avatar_link' => $userData->getAvatarLink()
         ];
 
         return $this->render('user/show.html.twig', [
