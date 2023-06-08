@@ -30,87 +30,10 @@
       <!-- Articles -->
       <main class="articles container">
         <div class="row mt-5">
-          <!-- Single article -->
-          <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
-              <div class="card">
-                <img src="./images/article-1.webp" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Comment centrer une div ?</h5>
-                  <p class="card-text">Le cauchemar de tous les développeurs ! Comment faire pour exécuter une action aussi difficile ? On vous explique tout ici !</p>
-                  <aside class="row mt-3">
-                    <p class="col-6 text-decoration-none fw-bold card-author">Par Lucas</p>
-                    <p class="col-6 text-muted fst-italic">Il y a 3 jours</p>
-                    <p class="col-12">
-                      <span>HTML</span>,
-                      <span>CSS</span>
-                    </p>
-                  </aside>
-                </div>
-              </div>
-            </a>
-          </div>
-          <!-- Single article -->
-          <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
-              <div class="card">
-                <img src="./images/article-2.webp" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Comment coder un réseau social ?</h5>
-                  <p class="card-text">Utilisez PHP et Symfony pour coder le nouveau Facebook !</p>
-                  <aside class="row mt-3">
-                    <p class="col-6 text-decoration-none fw-bold card-author">Par Lucas</p>
-                    <p class="col-6 text-muted fst-italic">Il y a 10 jours</p>
-                    <p class="col-12">
-                      <span>PHP</span>,
-                      <span>CSS</span>
-                      <span>CSS</span>
-                      <span>JavaScript</span>
-                    </p>
-                  </aside>
-                </div>
-              </div>
-            </a>
-          </div>
-          <!-- Single article -->
-          <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
-              <div class="card">
-                <img src="./images/article-3.webp" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Trouver un emploi en tant que Dev Junior</h5>
-                  <p class="card-text">Avec un marché saturé de développeurs juniors, comment faire pour se démarquer ?</p>
-                  <aside class="row mt-3">
-                    <p class="col-6 text-decoration-none fw-bold card-author">Par Lucas</p>
-                    <p class="col-6 text-muted fst-italic">Il y a 15 jours</p>
-                    <p class="col-12">
-                      <span>Emplois</span>,
-                      <span>Reconversion</span>
-                    </p>
-                  </aside>
-                </div>
-              </div>
-            </a>
-          </div>
-          <!-- Single article -->
-          <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-            <a href="{{ path('app_post_show') }}" class="card-link text-decoration-none">
-              <div class="card">
-                <img src="./images/article-4.webp" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Les développeurs nomades</h5>
-                  <p class="card-text">Grâce au télétravail, vous pouvez voyager à travers le monde !</p>
-                  <aside class="row mt-3">
-                    <p class="col-6 text-decoration-none fw-bold card-author">Par Lucas</p>
-                    <p class="col-6 text-muted fst-italic">Il y a un mois</p>
-                    <p class="col-12">
-                      <span>Lifestyle</span>
-                    </p>
-                  </aside>
-                </div>
-              </div>
-            </a>
-          </div>
+            {% include "post/_article-card.html.twig" %}
+            {% include "post/_article-card.html.twig" %}
+            {% include "post/_article-card.html.twig" %}
+            {% include "post/_article-card.html.twig" %}
         </div>
         <!-- See more articles -->
         <div class="d-flex justify-content-center my-4">

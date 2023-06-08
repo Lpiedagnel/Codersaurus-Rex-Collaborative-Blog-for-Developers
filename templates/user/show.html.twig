@@ -3,22 +3,42 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-    <div class="container my-5">
-        <div class="row card">
-            <img src="{{ user.avatar_link }}" alt="Avatar de {{ user.username }}" class="col-12 col-md-6 col-lg-4">
-            <div class="col-12 col-md-6 col-lg-8">
-                <h1>{{ user.username }}</h1>
-                {% if user.job %}
-                    <h2>{{ user.job }}</h2>
-                {% endif %}
+    <div class="container profil">
 
-                <p>Inscrit le {{ user.createdAt|date("d/m/Y", "Europe/Paris") }}</p>
+        <!-- Profil card -->
+        <div class="card border border-5 my-5">
+            <div class="row">
+                <div class="col-12 col-lg-4 d-flex justify-content-center">
+                    <img src="{{ user.avatar_link }}" alt="Avatar de {{ user.username }}" class="rounded col-6 m-3">
+                </div>
+                <div class="col-12 col-lg-8 d-flex flex-column justify-content-center align-items-center">
+                    <h1 class="my-3 fw-bold">{{ user.username }}</h1>
 
-                {% if user.bio %}
-                    <p>{{ user.bio }}</p>
-                {% endif %}
-                
+                    {% if user.job %}
+                        <h2 class="fs-5">{{ user.job }}</h2>
+                    {% endif %}
+
+                    {% if user.bio %}
+                        <p>{{ user.bio }}</p>
+                    {% endif %}
+                    
+                </div>
             </div>
         </div>
+
+        <!-- User articles -->
+        <h2>Tous les articles de {{ user.username }}</h2>
+        <main class="articles container">
+            <div class="row mt-5">
+            <!-- Single article -->
+            {% include "post/_article-card.html.twig" %}
+            {% include "post/_article-card.html.twig" %}
+            {% include "post/_article-card.html.twig" %}
+            {% include "post/_article-card.html.twig" %}
+            </div>
+        </main>
+
+
+
     </div>
 {% endblock %}
