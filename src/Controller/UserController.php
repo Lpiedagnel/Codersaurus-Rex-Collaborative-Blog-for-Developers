@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -16,8 +17,22 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
+        $usersData = $userRepository->findAll();
+
+        $users = [];
+
+        foreach ($usersData as $currentUser) {
+            $user = [
+                'id' => $currentUser->getId(),
+                'avatar_link' => $currentUser->getAvatarLink(),
+                'username' => $currentUser->getUsername(),
+                'job' => $currentUser->getJob()
+            ];
+            $users[] = $user;
+        }
+
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users,
         ]);
     }
 

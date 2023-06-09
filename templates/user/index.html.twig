@@ -1,51 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
-    <h1>User index</h1>
+<div class="users-index container my-3">
+    <h1>Liste des utilisateurs</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>Username</th>
-                <th>Job</th>
-                <th>Bio</th>
-                <th>CreatedAt</th>
-                <th>Birthday</th>
-                <th>Avatar_link</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.job }}</td>
-                <td>{{ user.bio }}</td>
-                <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ user.birthday ? user.birthday|date('Y-m-d') : '' }}</td>
-                <td>{{ user.avatarLink }}</td>
-                <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <!-- Display user -->
+    {% for user in users %}
+        <div class="user-card card my-3">
+            <div class="row">
+                <div class="col-12 col-sm-4 col-lg-2 d-flex justify-content-center align-items-center">
+                    <img class="col-3 col-sm-6 img-thumbnail object-fit-cover" src="{{ user.avatar_link }}" alt="Avatar de {{ user.username }}">
+                </div>
+                <div class="col-12 col-sm-8 col-lg-10 d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-between p-1 p-lg-5 text-break">
+                    <h2 class="fw-bold fs-3">{{ user.username }}</h2>
+                        {% if user.job %}
+                            <h3 class="fs-5">{{ user.job }}</h3>
+                        {% endif %}
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-primary">Voir le profil</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 
-    <a href="{{ path('app_user_new') }}">Create new</a>
+
+</div>
 {% endblock %}
