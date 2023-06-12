@@ -1,13 +1,143 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-    <h1>Edit User</h1>
+    <div class="container my-4 col-12 col-md-6 col-lg-4">
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ form_start(form, {
+            attr: {
+                class: 'auth-form p-4'
+            }
+        }) }}
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+            <h1>Modifier votre profil</h1>
 
-    {{ include('user/_delete_form.html.twig') }}
+            {# Email #}
+            <div class="mb-4">
+                {{ form_label(form.email, 'Email', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.email, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre addresse email'
+                    }
+                }) }}
+                {{ form_help(form.email, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.email) %}
+                    <div class="text-danger">{{ form_errors(form.email) }}</div>
+                {% endif %}
+            </div>
+
+            {# Pseudo #}
+            <div class="mb-4">
+                {{ form_label(form.username, 'Pseudo', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.username, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre super pseudo'
+                    }
+                }) }}
+                {{ form_help(form.username, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.username) %}
+                    <div class="text-danger">{{ form_errors(form.username) }}</div>
+                {% endif %}
+            </div>
+
+            {# Métier #}
+            <div class="mb-4">
+                {{ form_label(form.job, 'Métier', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.job, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre métier'
+                    }
+                }) }}
+                {{ form_help(form.job, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.job) %}
+                    <div class="text-danger">{{ form_errors(form.job) }}</div>
+                {% endif %}
+            </div>
+
+            {# Bio #}
+            <div class="mb-4">
+                {{ form_label(form.bio, 'Biographie', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.bio, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre biographie'
+                    }
+                }) }}
+                {{ form_help(form.bio, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.bio) %}
+                    <div class="text-danger">{{ form_errors(form.bio) }}</div>
+                {% endif %}
+            </div>
+
+            {# Birthday #}
+            <div class="mb-4">
+                {{ form_label(form.birthday, 'Anniversaire', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.birthday, {
+                    attr: {
+                        'type': 'date'
+                    }
+                }) }}
+                {{ form_help(form.birthday, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.birthday) %}
+                    <div class="text-danger">{{ form_errors(form.birthday) }}</div>
+                {% endif %}
+            </div>
+
+            {# Submit #}
+            <div class="mb-4 d-flex flex-column flex-lg-row justify-content-between align-items-center">
+                <button type="submit" class="btn btn-primary mb-3 mb-lg-0">Mettre à jour</button>
+            </div>
+
+        {{ form_end(form) }}
+
+    </div>
 {% endblock %}
