@@ -132,6 +132,29 @@
                 {% endif %}
             </div>
 
+            {# Avatar #}
+            <div class="mb-4">
+                {{ form_label(form.avatarFile, 'Pour définir votre photo de profil, téléchargez une image de maximum 1 Mo', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.avatarFile, {
+                    attr: {
+                        'class': 'form-control',
+                    }
+                }) }}
+                {{ form_help(form.avatarFile, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.avatarFile) %}
+                    <div class="text-danger">{{ form_errors(form.avatarFile) }}</div>
+                {% endif %}
+            </div>
+
             {# Submit #}
             <div class="mb-4 d-flex flex-column flex-lg-row justify-content-between align-items-center">
                 <button type="submit" class="btn btn-primary mb-3 mb-lg-0">Mettre à jour</button>

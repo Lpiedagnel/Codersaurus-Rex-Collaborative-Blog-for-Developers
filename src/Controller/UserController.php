@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Validator\Constraints\File;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -98,15 +99,55 @@ class UserController extends AbstractController
         $form = $this->createFormBuilder($user)
             ->add('email', EmailType::class)
             ->add('username', TextType::class)
-            ->add('job', TextType::class)
-            ->add('bio', TextareaType::class)
-            ->add('birthday', DateType::class)
+            ->add('job', TextType::class, ['required' => false])
+            ->add('bio', TextareaType::class, ['required' => false])
+            ->add('birthday', DateType::class, [
+                'required' => false,
+                'years' => range(date('Y') - 10, date('Y') - 100)
+                ])
+            ->add('avatarFile', FileType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'enctype' => 'multipart/form-data'
+                ],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'maxSizeMessage' => 'Le fichier est trop volumineux. La taille maximale autorisée est 1024 Ko.',
+                        'mimeTypes' => [
+                            'image/jpg',
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Vous devez uploader une image (format .jpg, .jpeg, .png ou .webp)'
+                    ])
+                ]
+            ])
             ->getForm()
             ;
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Check Upload
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['avatarFile']->getData();
+
+            if ($uploadedFile) {
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/avatars';
+    
+                $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFileName = $user->getId() . '.webp';
+    
+                $uploadedFile->move(
+                    $destination,
+                    $newFileName
+                );
+                $user->setAvatarLink('/uploads/avatars/' . $newFileName);
+            }
 
             $userRepository->save($user, true);
 
