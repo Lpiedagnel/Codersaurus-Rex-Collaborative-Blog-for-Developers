@@ -118,7 +118,8 @@
                 }) }}
                 {{ form_widget(form.birthday, {
                     attr: {
-                        'type': 'date'
+                        'type': 'date',
+                        'class': 'form-control'
                     }
                 }) }}
                 {{ form_help(form.birthday, {
@@ -134,25 +135,34 @@
 
             {# Avatar #}
             <div class="mb-4">
-                {{ form_label(form.avatarFile, 'Pour définir votre photo de profil, téléchargez une image de maximum 1 Mo', {
-                    label_attr: {
-                        class: 'form-label'
-                    }
-                }) }}
-                {{ form_widget(form.avatarFile, {
-                    attr: {
-                        'class': 'form-control',
-                    }
-                }) }}
-                {{ form_help(form.avatarFile, {
-                    help_attr: {
-                        class: 'form-text'
-                    }
-                }) }}
-                {# Error #}
-                {% if form_errors(form.avatarFile) %}
-                    <div class="text-danger">{{ form_errors(form.avatarFile) }}</div>
-                {% endif %}
+            <hr>
+                <div class="row">
+                    <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                        <img class="my-4 my-md-0 img-thumbnail object-fit-cover" src="{{ user.avatarLink }}" alt="Avatar de {{ user.username }}">
+                    </div>
+                    <div class="col-12 col-md-8 d-flex flex-column justify-content-center align-items-center">
+                        {{ form_label(form.avatarFile, 'Pour définir votre photo de profil, téléchargez une image de maximum 1 Mo', {
+                            label_attr: {
+                                class: 'form-label'
+                            }
+                        }) }}
+                        {{ form_widget(form.avatarFile, {
+                            attr: {
+                                'class': 'form-control',
+                            }
+                        }) }}
+                        {{ form_help(form.avatarFile, {
+                            help_attr: {
+                                class: 'form-text'
+                            }
+                        }) }}
+                        {# Error #}
+                        {% if form_errors(form.avatarFile) %}
+                            <div class="text-danger">{{ form_errors(form.avatarFile) }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
             </div>
 
             {# Submit #}

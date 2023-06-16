@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -101,7 +102,9 @@ class UserController extends AbstractController
             ->add('username', TextType::class)
             ->add('job', TextType::class, ['required' => false])
             ->add('bio', TextareaType::class, ['required' => false])
-            ->add('birthday', DateType::class, [
+            ->add('birthday', BirthdayType::class, [
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
                 'required' => false,
                 'years' => range(date('Y') - 10, date('Y') - 100)
                 ])
