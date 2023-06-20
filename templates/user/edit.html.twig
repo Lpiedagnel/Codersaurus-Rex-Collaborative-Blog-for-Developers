@@ -5,6 +5,7 @@
 {% block body %}
     <div class="container my-4 col-12 col-md-6 col-lg-4">
 
+
         {{ form_start(form, {
             attr: {
                 class: 'auth-form p-4'
@@ -12,6 +13,12 @@
         }) }}
 
             <h1>Modifier votre profil</h1>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
 
             {# Email #}
             <div class="mb-4">
@@ -130,6 +137,54 @@
                 {# Error #}
                 {% if form_errors(form.birthday) %}
                     <div class="text-danger">{{ form_errors(form.birthday) }}</div>
+                {% endif %}
+            </div>
+
+            {# Password #}
+            <div class="mb-4">
+                {{ form_label(form.password.first, 'Modifier votre mot de passe.', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.password.first, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Votre mot de passe top secret'
+                    }
+                }) }}
+                {{ form_help(form.password.first, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.password.first) %}
+                    <div class="text-danger">{{ form_errors(form.password.first) }}</div>
+                {% endif %}
+            </div>
+
+            {# Repeat Password #}
+            <div class="mb-4">
+                {{ form_label(form.password.second, 'Répétez votre nouveau mot de passe.', {
+                    label_attr: {
+                        class: 'form-label'
+                    }
+                }) }}
+                {{ form_widget(form.password.second, {
+                    attr: {
+                        'class': 'form-control',
+                        'placeholder': 'Oui, oui, le même !'
+                    }
+                }) }}
+                {{ form_help(form.password.second, {
+                    help_attr: {
+                        class: 'form-text'
+                    }
+                }) }}
+                {# Error #}
+                {% if form_errors(form.password.second) %}
+                    <div class="text-danger">{{ form_errors(form.password.second) }}</div>
                 {% endif %}
             </div>
 
