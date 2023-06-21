@@ -22,10 +22,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Validator\Constraints\File;
+use App\Service\UserAuthorizationService;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
+    private $userAuthorization;
+
+    public function __construct(UserAuthorizationService $userAuthorization)
+    {
+        $this->userAuthorization = $userAuthorization;
+    }
+
+
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -87,15 +97,11 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST']), IsGranted('ROLE_USER')]
     public function edit(Request $request, User $user, UserRepository $userRepository, Security $security): Response
     {
         // Check auth
-        $currentUser = $security->getUser();
-
-        if ($currentUser->getId() !== $user->getId()) {
-            throw new Exception("Vous n'avez pas l'autorisation de modifier ce compte.");
-        }
+        $this->userAuthorization->checkUserAuthorization($user);
 
         // $form = $this->createForm(UserType::class, $user);
         $form = $this->createFormBuilder($user)
@@ -103,12 +109,6 @@ class UserController extends AbstractController
             ->add('username', TextType::class)
             ->add('job', TextType::class, ['required' => false])
             ->add('bio', TextareaType::class, ['required' => false])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class, 
-                    'invalid_message' => 'Les mots de passe doivent être identiques !',
-                    'mapped' => false,
-                    'required' => false
-            ])
             ->add('birthday', BirthdayType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -171,6 +171,13 @@ class UserController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    // #[Route('/{id}/edit/password', name: 'app_user_password_edit', methods: ['GET', 'POST'])]
+    // public function changePassword(Request $request, User $user, UserRepository $userRepository): Response
+    // {
+
+    // }
+    
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
