@@ -103,7 +103,6 @@ class UserController extends AbstractController
         // Check auth
         $this->userAuthorization->checkUserAuthorization($user);
 
-        // $form = $this->createForm(UserType::class, $user);
         $form = $this->createFormBuilder($user)
             ->add('email', EmailType::class)
             ->add('username', TextType::class)
@@ -149,7 +148,6 @@ class UserController extends AbstractController
             if ($uploadedFile) {
                 $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/avatars';
     
-                $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $newFileName = $user->getId() . '.webp';
     
                 $uploadedFile->move(
@@ -172,11 +170,32 @@ class UserController extends AbstractController
         ]);
     }
 
-    // #[Route('/{id}/edit/password', name: 'app_user_password_edit', methods: ['GET', 'POST'])]
-    // public function changePassword(Request $request, User $user, UserRepository $userRepository): Response
-    // {
+    #[Route('/{id}/edit/password', name: 'app_user_password_edit', methods: ['GET', 'POST'])]
+    public function changePassword(Request $request, User $user, UserRepository $userRepository): Response
+    {
+        // Check auth
+        $this->userAuthorization->checkUserAuthorization($user);
 
-    // }
+        // Form
+        $form = $this->createFormBuilder()
+            ->add('current_password', PasswordType::class, [
+                'required' => true
+            ])
+            ->add('new_password', RepeatedType::class, [
+                'type' => PasswordType::class, 
+                'invalid_message' => 'Les mots de passe doivent être identiques !',
+                'required' => true
+            ])
+            ->getForm()
+            ;
+        $form->handleRequest($request);
+
+        // Render
+        return $this->render('user/edit-password.html.twig', [
+            'user' => $user,
+            'form' => $form
+        ]);
+    }
     
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]

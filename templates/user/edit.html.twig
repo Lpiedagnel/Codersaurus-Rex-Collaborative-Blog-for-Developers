@@ -139,6 +139,12 @@
                     <div class="text-danger">{{ form_errors(form.birthday) }}</div>
                 {% endif %}
             </div>
+            
+            {# Password  #}
+            <div class="mb-4">
+                <p class="form-label">Mot de passe</p>
+                <a href="{{ path('app_user_password_edit', { id: user.id } ) }}" class="btn btn-secondary">Changer mon mot de passe</a>
+            </div>
 
             {# Avatar #}
             <div class="mb-4">
