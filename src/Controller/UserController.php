@@ -174,7 +174,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit/password', name: 'app_user_password_edit', methods: ['GET', 'POST'])]
-    public function changePassword(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function changePassword(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         // Check auth
         $this->userAuthorization->checkUserAuthorization($user);
@@ -218,9 +218,6 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('app_user_edit', [ 'id' => $user->getId()]);
         }
-
-
-
 
         // Render
         return $this->render('user/edit-password.html.twig', [
