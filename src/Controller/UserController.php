@@ -40,7 +40,7 @@ class UserController extends AbstractController
 
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository, Security $security): Response
     {
         $usersData = $userRepository->findAll();
 
@@ -51,7 +51,8 @@ class UserController extends AbstractController
                 'id' => $currentUser->getId(),
                 'avatar_link' => $currentUser->getAvatarLink(),
                 'username' => $currentUser->getUsername(),
-                'job' => $currentUser->getJob()
+                'job' => $currentUser->getJob(),
+                'role' => $currentUser->getRoles()
             ];
             $users[] = $user;
         }
@@ -91,7 +92,8 @@ class UserController extends AbstractController
             'bio' => $userData->getBio(),
             'createdAt' => $userData->getCreatedAt(),
             'birthday' => $userData->getBirthday(),
-            'avatar_link' => $userData->getAvatarLink()
+            'avatar_link' => $userData->getAvatarLink(),
+            'role' => $userData->getRoles()
         ];
 
         return $this->render('user/show.html.twig', [

@@ -14,9 +14,21 @@
                 <div class="col-12 col-lg-8 d-flex flex-column justify-content-center align-items-center">
                     <h1 class="my-3 fw-bold">{{ user.username }}</h1>
 
+                    <h2 class="fs-6 text-secondary">
+                        Rôle : 
+                        {% if 'ROLE_ADMIN' in user.role %}
+                            Administration
+                        {% elseif 'ROLE_EDITOR' in user.role %}
+                            Rédaction
+                        {% else %}
+                            Membre
+                        {% endif %}
+                    </h2>
+
                     {% if user.job %}
                         <h2 class="fs-5">{{ user.job }}</h2>
                     {% endif %}
+
 
                     {% if user.bio %}
                         <p>{{ user.bio }}</p>

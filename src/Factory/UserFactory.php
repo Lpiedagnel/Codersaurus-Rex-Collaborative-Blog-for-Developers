@@ -71,7 +71,7 @@ final class UserFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
-        $username = self::faker()->randomElement(self::USERNAMES) . self::faker()->randomNumber(1, 50);
+        $username = self::faker()->randomElement(self::USERNAMES) . rand(0, 500);
         $domain = self::faker()->freeEmailDomain();
         $email = $username . '@' . $domain;
         
