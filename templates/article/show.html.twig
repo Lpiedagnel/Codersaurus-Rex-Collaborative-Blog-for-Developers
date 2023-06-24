@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article{% endblock %}
+
+{% block body %}
+    <h1>Article</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ article.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ article.title }}</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>{{ article.tags ? article.tags|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ article.content }}</td>
+            </tr>
+            <tr>
+                <th>Author_id</th>
+                <td>{{ article.authorId }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ article.updatedAt ? article.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Thumbnail_url</th>
+                <td>{{ article.thumbnailUrl }}</td>
+            </tr>
+            <tr>
+                <th>Views_count</th>
+                <td>{{ article.viewsCount }}</td>
+            </tr>
+            <tr>
+                <th>Meta_title</th>
+                <td>{{ article.metaTitle }}</td>
+            </tr>
+            <tr>
+                <th>Meta_description</th>
+                <td>{{ article.metaDescription }}</td>
+            </tr>
+            <tr>
+                <th>Comments</th>
+                <td>{{ article.comments ? article.comments|json_encode : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_article_index') }}">back to list</a>
+
+    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
+
+    {{ include('article/_delete_form.html.twig') }}
+{% endblock %}
