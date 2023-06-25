@@ -3,6 +3,8 @@
 namespace App\Factory;
 
 use App\Entity\Article;
+use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Repository\ArticleRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -37,14 +39,26 @@ final class ArticleFactory extends ModelFactory
         "Faut-il se réorienter en Dev Web ?"
     ];
 
+    const THUMBNAILS = [
+        "/uploads/thumbnails/article-1.webp",
+        "/uploads/thumbnails/article-2.webp",
+        "/uploads/thumbnails/article-3.webp",
+        "/uploads/thumbnails/article-4.webp"
+    ];
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct()
+    
+    private $userRepository;
+    private $userIds;
+
+    public function __construct(UserRepository $userRepository)
     {
         parent::__construct();
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -54,15 +68,19 @@ final class ArticleFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        $userIds = $this->userRepository->findAllUserIds();
+        $randomIndex = array_rand($userIds);
+        $randomUserId = $userIds[$randomIndex]['id'];
+
         return [
-            'author_id' => 263,
+            'author_id' => $randomUserId,
             'comments' => [],
             'content' => self::faker()->text(),
             'created_at' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'meta_description' => self::faker()->text(255),
             'meta_title' => self::faker()->text(100),
             'tags' => ['PHP', 'HTML', 'CSS'],
-            'thumbnail_url' => self::faker()->text(255),
+            'thumbnail_url' => self::faker()->randomElement(self::THUMBNAILS),
             'title' => self::faker()->randomElement(self::TITLES),
             'views_count' => self::faker()->randomNumber(),
         ];
