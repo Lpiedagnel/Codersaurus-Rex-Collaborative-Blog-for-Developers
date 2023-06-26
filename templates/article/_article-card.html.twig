@@ -10,7 +10,7 @@
                 {{ article.extract }}
             </p>
             <aside class="row mt-3">
-                <p class="col-6 text-decoration-none fw-bold card-author">Par Lucas</p>
+                <p class="col-6 text-decoration-none fw-bold card-author">Par {{ article.author.username }}</p>
                 <p class="col-6 text-muted fst-italic">{{ article.createdAt|ago(locale='fr') }}</p>
                 <p class="col-12">
                     {{ article.tags|join(', ') }}

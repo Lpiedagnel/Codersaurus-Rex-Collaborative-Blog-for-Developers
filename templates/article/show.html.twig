@@ -8,7 +8,9 @@
         <header class="post__header d-flex flex-column text-center">
             <h1>{{ article.title }}</h1>
             <img src="{{ author.avatar_link }}" class="img-thumbnail rounded-circle mx-auto" alt="Auteur de l'article">
-            <h2 class="fw-bold">{{ author.username }}</h2>
+            <a class="text-decoration-none" href="{{ path('app_user_show', { id: author.id }) }}">
+              <h2 class="fw-bold">{{ author.username }}</h2>
+            </a>
             {% if author.job %}
                 <h3 class="text-muted fw-lighter fst-italic">{{ author.job }}</h3>
             {% endif %}

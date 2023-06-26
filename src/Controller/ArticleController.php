@@ -44,11 +44,12 @@ class ArticleController extends AbstractController
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
     public function show(Article $article, UserRepository $userRepository): Response
     {
-        $authorId = $article->getAuthorId();
+        $authorId = $article->getAuthor();
 
         $user = $userRepository->find($authorId);
 
         $author = [
+            'id' => $user->getId(),
             'username' => $user->getUsername(),
             'avatar_link' => $user->getAvatarLink(),
             'job' => $user->getJob(),

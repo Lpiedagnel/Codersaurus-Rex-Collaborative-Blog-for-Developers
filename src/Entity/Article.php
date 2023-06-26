@@ -24,9 +24,6 @@ class Article
     private ?string $content = null;
 
     #[ORM\Column]
-    private ?int $author_id = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
@@ -49,6 +46,10 @@ class Article
 
     #[ORM\Column(length: 100)]
     private ?string $extract = null;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
 
     public function getId(): ?int
     {
@@ -87,18 +88,6 @@ class Article
     public function setContent(string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getAuthorId(): ?int
-    {
-        return $this->author_id;
-    }
-
-    public function setAuthorId(int $author_id): self
-    {
-        $this->author_id = $author_id;
 
         return $this;
     }
@@ -195,6 +184,18 @@ class Article
     public function setExtract(string $extract): self
     {
         $this->extract = $extract;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

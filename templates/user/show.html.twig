@@ -42,11 +42,9 @@
         <h2>Tous les articles de {{ user.username }}</h2>
         <main class="articles container">
             <div class="row mt-5">
-            <!-- Single article -->
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
+            {% for article in user.articles %}
+                {% include "article/_article-card.html.twig" %} 
+            {% endfor %}
             </div>
         </main>
 

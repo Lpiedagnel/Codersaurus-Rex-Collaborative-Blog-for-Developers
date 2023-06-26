@@ -93,7 +93,8 @@ class UserController extends AbstractController
             'createdAt' => $userData->getCreatedAt(),
             'birthday' => $userData->getBirthday(),
             'avatar_link' => $userData->getAvatarLink(),
-            'role' => $userData->getRoles()
+            'role' => $userData->getRoles(),
+            'articles' => $userData->getArticles()
         ];
 
         return $this->render('user/show.html.twig', [
