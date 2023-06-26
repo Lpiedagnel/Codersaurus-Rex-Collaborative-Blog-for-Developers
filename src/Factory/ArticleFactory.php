@@ -75,7 +75,8 @@ final class ArticleFactory extends ModelFactory
         return [
             'author_id' => $randomUserId,
             'comments' => [],
-            'content' => self::faker()->text(),
+            'extract' => self::faker()->text(100),
+            'content' => self::faker()->text(2000),
             'created_at' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'meta_description' => self::faker()->text(255),
             'meta_title' => self::faker()->text(100),

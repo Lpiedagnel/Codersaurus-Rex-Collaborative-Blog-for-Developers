@@ -39,6 +39,18 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
+    public function findLatest(int $limit = null): array
+    {
+        $query = $this->createQueryBuilder('a')
+            ->orderBy('a.created_at', 'DESC');
+
+        if ($limit !== null) {
+            $query->setMaxResults($limit);
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Article[] Returns an array of Article objects
 //     */

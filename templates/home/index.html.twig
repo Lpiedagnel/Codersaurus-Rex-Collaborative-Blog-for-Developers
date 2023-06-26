@@ -30,14 +30,13 @@
       <!-- Articles -->
       <main class="articles container">
         <div class="row mt-5">
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
+        {% for article in articles %}
+            {% include "article/_article-card.html.twig" %}
+        {% endfor %}
         </div>
         <!-- See more articles -->
         <div class="d-flex justify-content-center my-4">
-          <a href="#" class="fw-bold text-decoration-none fs-5">Plus d'articles &#10132;</a>
+          <a href="{{ path('app_article_index') }}" class="fw-bold text-decoration-none fs-5">Plus d'articles &#10132;</a>
         </div>
       </main>
 {% endblock %}

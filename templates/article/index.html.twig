@@ -1,55 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article index{% endblock %}
+{% block title %}Tous les articles{% endblock %}
 
 {% block body %}
-    <h1>Article index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Tags</th>
-                <th>Content</th>
-                <th>Author_id</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>Thumbnail_url</th>
-                <th>Views_count</th>
-                <th>Meta_title</th>
-                <th>Meta_description</th>
-                <th>Comments</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td>{{ article.id }}</td>
-                <td>{{ article.title }}</td>
-                <td>{{ article.tags ? article.tags|json_encode : '' }}</td>
-                <td>{{ article.content }}</td>
-                <td>{{ article.authorId }}</td>
-                <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ article.updatedAt ? article.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ article.thumbnailUrl }}</td>
-                <td>{{ article.viewsCount }}</td>
-                <td>{{ article.metaTitle }}</td>
-                <td>{{ article.metaDescription }}</td>
-                <td>{{ article.comments ? article.comments|json_encode : '' }}</td>
-                <td>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
-                    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="13">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_article_new') }}">Create new</a>
+<!-- Tags -->
+<section class="container tags mt-4">
+    <h1 class="my-5">Tous les articles</h1>
+    <hr class="my-3">
+    <div class="d-flex flex-row align-items-start flex-wrap gap-4">
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">HTML</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">CSS</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">JavaScript</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">PHP</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Python</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Ruby</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Java</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">WordPress</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Prestashop</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Reconversion</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Lifestyle</a>
+        <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Emplois</a>
+    </div>
+</section>
+<!-- Articles -->
+<main class="articles container">
+    <div class="row mt-5">
+    {% for article in articles %}
+        {% include "article/_article-card.html.twig" %}
+    {% endfor %}
+    </div>
+</main>
 {% endblock %}

@@ -47,6 +47,9 @@ class Article
     #[ORM\Column]
     private array $comments = [];
 
+    #[ORM\Column(length: 100)]
+    private ?string $extract = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -180,6 +183,18 @@ class Article
     public function setComments(array $comments): self
     {
         $this->comments = $comments;
+
+        return $this;
+    }
+
+    public function getExtract(): ?string
+    {
+        return $this->extract;
+    }
+
+    public function setExtract(string $extract): self
+    {
+        $this->extract = $extract;
 
         return $this;
     }

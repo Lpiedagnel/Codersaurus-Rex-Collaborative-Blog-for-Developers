@@ -15,7 +15,7 @@
             <hr>
             <aside class="d-flex flex-row align-items-center justify-content-between text-muted fst-italic fs-5">
                 <p>{{ article.tags|join(', ') }}</p>
-                <p>{{ article.createdAt|date("d/m/Y", "Europe/Paris") }}</p>
+                <p>{{ article.createdAt|ago(locale='fr') }}</p>
             </aside>
         </header>
         <!-- Main -->
