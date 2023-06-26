@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,10 +42,21 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article): Response
+    public function show(Article $article, UserRepository $userRepository): Response
     {
+        $authorId = $article->getAuthorId();
+
+        $user = $userRepository->find($authorId);
+
+        $author = [
+            'username' => $user->getUsername(),
+            'avatar_link' => $user->getAvatarLink(),
+            'job' => $user->getJob(),
+        ];
+
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'author' => $author
         ]);
     }
 
