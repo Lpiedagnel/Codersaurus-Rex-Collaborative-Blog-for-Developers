@@ -46,6 +46,10 @@ final class ArticleFactory extends ModelFactory
         "/uploads/thumbnails/article-4.webp"
     ];
 
+    const TAGS = [
+        "HTML", "CSS", "JavaScript", "PHP", "Python", "Ruby", "Java", "WordPress", "Prestashop", "Reconversion", "Lifestyle", "Emplois"
+    ];
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -53,7 +57,6 @@ final class ArticleFactory extends ModelFactory
      */
     
     private $userRepository;
-    private $userIds;
 
     public function __construct(UserRepository $userRepository)
     {
@@ -79,7 +82,7 @@ final class ArticleFactory extends ModelFactory
             'created_at' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'meta_description' => self::faker()->text(255),
             'meta_title' => self::faker()->text(100),
-            'tags' => ['PHP', 'HTML', 'CSS'],
+            'tags' => self::faker()->randomElements(self::TAGS, 3),
             'thumbnail_url' => self::faker()->randomElement(self::THUMBNAILS),
             'title' => self::faker()->randomElement(self::TITLES),
             'views_count' => self::faker()->randomNumber(),

@@ -51,6 +51,35 @@ class ArticleRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    public function findByTag(string $tag): array
+    {
+        $queryBuilder = $this->createQueryBuilder('a');
+        $queryBuilder->where(
+            $queryBuilder->expr()->like(
+                'a.tags',
+                $queryBuilder->expr()->literal('%"' . $tag . '"%')
+            )
+        );
+    
+        return $queryBuilder->getQuery()->getResult();
+
+        // Other try with SQL
+        /*
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "
+            SELECT *
+            FROM article
+            WHERE JSON_CONTAINS(tags, :tag, '$')
+            ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('tag', $tag);
+        $result = $stmt->executeQuery();
+    
+        return $result->fetchAll();
+        */
+    }
+
+
 //    /**
 //     * @return Article[] Returns an array of Article objects
 //     */
