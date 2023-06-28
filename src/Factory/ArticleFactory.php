@@ -71,11 +71,8 @@ final class ArticleFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
-        $users = $this->userRepository->findAll();
-        $randomUser = $users[array_rand($users)];
-
         return [
-            'author' => $randomUser,
+            'author' => UserFactory::class,
             'comments' => [],
             'extract' => self::faker()->text(100),
             'content' => self::faker()->text(2000),
