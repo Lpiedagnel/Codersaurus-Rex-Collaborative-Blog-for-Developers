@@ -22,14 +22,17 @@ class HomeController extends AbstractController
         
         if ($tag === null) {
             $articles = $articleRepository->findLatest(4);
+            $currentTag = "Les derniers articles";
         } else {
            $articles = $articleRepository->findByTag($tag);
+           $currentTag = $tag;
         }
         
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
             'articles' => $articles,
-            'tags' => $tags
+            'tags' => $tags,
+            'currentTag' => $currentTag
         ]);
     }
 }

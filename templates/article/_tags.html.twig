@@ -1,0 +1,16 @@
+{% block tags %}
+<section class="container tags">
+<h3 class="mt-3 fw-bolder">{{ currentTag }}</h3>
+<hr class="my-3">
+    <div class="d-flex flex-row align-items-start flex-wrap gap-4">
+    {% for tag in tags %}
+        <a  
+            href="{{ path('app_home', {tag: tag}) }}" 
+            class=" btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace {% if currentTag == tag %} active {% endif %}"
+        >
+        {{ tag }}
+        </a>
+    {% endfor %}
+    </div>
+</section>
+{% endblock %}
