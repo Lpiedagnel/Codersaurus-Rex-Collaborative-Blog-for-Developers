@@ -79,6 +79,26 @@ class ArticleRepository extends ServiceEntityRepository
         */
     }
 
+    public function getAllTags(): array
+    {
+        $query = $this->createQueryBuilder('a')
+            ->select('a.tags')
+            ->getQuery();
+    
+        $result = $query->getResult();
+
+        // Get the "key" tag
+        $tags = array_column($result, 'tags');
+    
+        // Merge all array and delete duplicate. The spread operator "..." unpack arrays.
+        $allTags = array_unique(array_merge(...$tags));
+
+        sort($allTags);
+    
+        return $allTags;
+    }
+    
+
 
 //    /**
 //     * @return Article[] Returns an array of Article objects

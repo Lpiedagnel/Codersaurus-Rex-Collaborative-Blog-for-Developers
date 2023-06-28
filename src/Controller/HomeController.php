@@ -16,6 +16,8 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(ArticleRepository $articleRepository, Request $request): Response
     {
+        $tags = $articleRepository->getAllTags();
+
         $tag = $request->query->get('tag');
         
         if ($tag === null) {
@@ -26,7 +28,8 @@ class HomeController extends AbstractController
         
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'articles' => $articles
+            'articles' => $articles,
+            'tags' => $tags
         ]);
     }
 }
