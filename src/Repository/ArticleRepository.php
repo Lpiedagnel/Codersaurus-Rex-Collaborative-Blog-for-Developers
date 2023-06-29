@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @extends ServiceEntityRepository<Article>
@@ -39,7 +40,7 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-    public function findLatest(int $limit = null): array
+    public function createFindLatest(int $limit = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
             ->orderBy('a.created_at', 'DESC');
@@ -48,7 +49,7 @@ class ArticleRepository extends ServiceEntityRepository
             $query->setMaxResults($limit);
         }
 
-        return $query->getQuery()->getResult();
+        return $query;
     }
 
     public function findByTag(string $tag): array
