@@ -6,7 +6,12 @@ use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\StringType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +23,33 @@ class ArticleController extends AbstractController
     public function new(Request $request, ArticleRepository $articleRepository): Response
     {
         $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
+
+        $form = $this->createFormBuilder()
+            ->add('title', TextType::class)
+            ->add('extract', TextType::class)
+            ->add('tags', ChoiceType::class, [
+                'choices' => [
+                    'HTML' => 'HTML',
+                    'CSS' => 'CSS',
+                    "JavaScript" => "JavaScript",
+                    "PHP" => "PHP", 
+                    "Python" => "Python", 
+                    "Ruby" => "Ruby", 
+                    "Java" => "Java", 
+                    "WordPress" => "WordPress", 
+                    "Prestashop" => "Prestashop", 
+                    "Reconversion" => "Reconversion", 
+                    "Lifestyle" => "Lifestyle", 
+                    "Emplois" => "Emplois"
+                ],
+                'multiple' => true,
+                'expanded' => true
+            ])
+            ->add('content', TextareaType::class)
+            ->add('meta_title', TextType::class)
+            ->add('meta_description', TextareaType::class)
+            ->getForm();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

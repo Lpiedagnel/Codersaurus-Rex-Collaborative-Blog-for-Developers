@@ -15,7 +15,6 @@ class ArticleType extends AbstractType
             ->add('title')
             ->add('tags')
             ->add('content')
-            ->add('author_id')
             ->add('created_at')
             ->add('updated_at')
             ->add('thumbnail_url')
