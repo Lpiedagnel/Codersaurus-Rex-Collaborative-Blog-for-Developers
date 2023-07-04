@@ -98,6 +98,29 @@
             {% endif %}
         </div>
 
+        {# Avatar #}
+        <div class="mb-4">
+            {{ form_label(form.thumbnailUrl, 'Pour définir l\'image mise en avant, téléchargez une image de maximum 1 Mo', {
+                label_attr: {
+                    class: 'form-label'
+                }
+            }) }}
+            {{ form_widget(form.thumbnailUrl, {
+                attr: {
+                    'class': 'form-control',
+                }
+            }) }}
+            {{ form_help(form.thumbnailUrl, {
+                help_attr: {
+                    class: 'form-text'
+                }
+            }) }}
+            {# Error #}
+            {% if form_errors(form.thumbnailUrl) %}
+                <div class="text-danger">{{ form_errors(form.thumbnailUrl) }}</div>
+            {% endif %}
+        </div>
+
         {# Meta Title #}
         <div class="mb-4">
             {{ form_label(form.meta_title, 'SEO - Meta Title', {

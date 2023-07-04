@@ -33,7 +33,7 @@ class Article
     private ?string $thumbnail_url = null;
 
     #[ORM\Column]
-    private ?int $views_count = null;
+    private ?int $views_count = 0;
 
     #[ORM\Column(length: 100)]
     private ?string $meta_title = null;
