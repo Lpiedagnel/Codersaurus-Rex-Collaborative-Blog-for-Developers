@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
+use App\Service\UploadImageService;
 use Doctrine\DBAL\Types\StringType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -23,7 +24,7 @@ use Symfony\Component\Validator\Constraints\File;
 class ArticleController extends AbstractController
 {
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ArticleRepository $articleRepository, Security $security): Response
+    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage): Response
     {
         $article = new Article();
 
@@ -85,15 +86,12 @@ class ArticleController extends AbstractController
             $uploadedFile = $form['thumbnailUrl']->getData();
 
             if ($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails';
-    
-                $newFileName = $article->getId() . '.webp';
-    
-                $uploadedFile->move(
-                    $destination,
-                    $newFileName
-                );
-                $article->setThumbnailUrl('/uploads/thumbnails/' . $newFileName);
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
+                $fileName = $form['title']->getData() . '.webp';
+
+                $uploadImage->upload($uploadedFile, $destination, $fileName);
+
+                $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
             }
 
             $articleRepository->save($article, true);
