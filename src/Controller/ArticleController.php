@@ -90,9 +90,7 @@ class ArticleController extends AbstractController
 
             // Verify if slug is unique
             $existingArticle = $articleRepository->findOneBy(['slug' => $slug]);
-            if ($existingArticle) {
-                $slug .= '-' . uniqid();
-            }
+            $slug .= $existingArticle ? '-' . uniqid() : '';
 
             $article->setSlug($slug);
 
@@ -115,13 +113,13 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('article/new.html.twig', [
+        return $this->render('article/new.html.twig', [
             'article' => $article,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
+    #[Route('/{slug}', name: 'app_article_show', methods: ['GET'])]
     public function show(Article $article, UserRepository $userRepository): Response
     {
         $authorId = $article->getAuthor();
@@ -141,7 +139,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
+    #[Route('/{slug}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
         $form = $this->createForm(ArticleType::class, $article);
@@ -153,13 +151,13 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('article/edit.html.twig', [
+        return $this->render('article/edit.html.twig', [
             'article' => $article,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
+    #[Route('/{slug}', name: 'app_article_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {

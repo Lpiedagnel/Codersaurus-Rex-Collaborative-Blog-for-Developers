@@ -1,7 +1,7 @@
 {% block article %}
 <!-- Single article -->
 <div class="col-10 col-md-5 mx-auto my-2 my-md-4">
-    <a href="{{ path('app_article_show', { id: article.id }) }}" class="card-link text-decoration-none">
+    <a href="{{ path('app_article_show', { slug: article.slug }) }}" class="card-link text-decoration-none">
         <div class="card">
             <img src="{{ article.thumbnailUrl }}" class="card-img-top" alt="{{ article.title }}">
             <div class="card-body">

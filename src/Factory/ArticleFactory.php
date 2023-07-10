@@ -83,6 +83,7 @@ final class ArticleFactory extends ModelFactory
             'thumbnail_url' => self::faker()->randomElement(self::THUMBNAILS),
             'title' => self::faker()->randomElement(self::TITLES),
             'views_count' => self::faker()->randomNumber(),
+            'slug' => self::faker()->slug()
         ];
     }
 
