@@ -21,19 +21,48 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\File;
 use Cocur\Slugify\Slugify;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 #[Route('/article')]
 class ArticleController extends AbstractController
 {
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage): Response
+    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage, KernelInterface $kernel): Response
     {
         $article = new Article();
 
+
         $form = $this->createFormBuilder($article)
-            ->add('title', TextType::class)
-            ->add('extract', TextType::class)
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Entre 10 et 100 caractères'
+                ],
+                'required' => true,
+                'constraints' => [
+                    new Length([
+                        'min' => 10,
+                        'minMessage' => 'Le titre doit faire entre 10 et 100 caractères.',
+                        'max' => 100,
+                        'maxMessage' => 'Le titre doit faire entre 10 et 100 caractères.',
+                    ])
+                ]
+            ])
+            ->add('extract', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Entre 30 et 100 caractères'
+                ],
+                'required' => true,
+                'constraints' => [
+                    new Length([
+                        'min' => 30,
+                        'minMessage' => 'Le résumé de l\'article doit faire entre 30 et 100 caractères.',
+                        'max' => 100,
+                        'maxMessage' => 'Le résumé de l\'article doit faire entre 30 et 100 caractères.',
+                    ])
+                ]
+            ])
             ->add('tags', ChoiceType::class, [
                 'choices' => [
                     'HTML' => 'HTML',
@@ -52,9 +81,20 @@ class ArticleController extends AbstractController
                 'multiple' => true,
                 'expanded' => true
             ])
-            ->add('content', TextareaType::class)
+            ->add('content', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'Au moins 1 500 caractères',
+                    'autocomplete' => 'Hello world'
+                ],
+                'constraints' => [
+                    new Length([
+                        'min' => 1500,
+                        'minMessage' => 'L\'article doit faire au moins 1 500 caractères (ce qui correspond à environ 300 mots).',
+                    ])
+                ]
+            ])
             ->add('thumbnailUrl', FileType::class, [
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'attr' => [
                     'enctype' => 'multipart/form-data'
@@ -73,40 +113,64 @@ class ArticleController extends AbstractController
                     ])
                 ]
             ])
-            ->add('meta_title', TextType::class)
-            ->add('meta_description', TextareaType::class)
+            ->add('meta_title', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Entre 40 et 60 caractères'
+                ],
+                'constraints' => [
+                    new Length([
+                        'min' => 40,
+                        'minMessage' => 'La Meta Title doit faire entre 40 et 60 caractères.',
+                        'max' => 60,
+                        'maxMessage' => 'La Meta Title doit faire entre 40 et 60 caractères.',
+                    ])
+                ]
+            ])
+            ->add('meta_description', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'Entre 140 et 160 caractères'
+                ],
+                'constraints' => [
+                    new Length([
+                        'min' => 140,
+                        'minMessage' => 'La Meta Description doit faire entre 140 et 160 caractères.',
+                        'max' => 160,
+                        'maxMessage' => 'La Meta Description doit faire entre 140 et 160 caractères.',
+                    ])
+                ]
+            ])
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $article->setCreatedAt(new \DateTimeImmutable());
-            $article->setAuthor($security->getUser());
-
+            
             // Create unique slug
             $slugify = new Slugify;
             $slug = $slugify->slugify($article->getTitle());
-
+            
             // Verify if slug is unique
             $existingArticle = $articleRepository->findOneBy(['slug' => $slug]);
             $slug .= $existingArticle ? '-' . uniqid() : '';
-
+            
             $article->setSlug($slug);
-
+            
             // Check Upload
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['thumbnailUrl']->getData();
-
+            
             if ($uploadedFile) {
                 $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
-                $fileName = $form['title']->getData() . '.webp';
-
+                $fileName = $slug . '.webp';
+                
                 $uploadImage->upload($uploadedFile, $destination, $fileName);
-
+                
                 $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
             }
-
+            
+            $article->setAuthor($security->getUser());
+            $article->setCreatedAt(new \DateTimeImmutable());
             $articleRepository->save($article, true);
 
             $this->addFlash('success', "Votre article a bien été soumis ! La rédaction s'occupera de le relire et vous tiendra au courant par Mail !");
