@@ -18,12 +18,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\File;
+use Cocur\Slugify\Slugify;
 
 #[Route('/article')]
 class ArticleController extends AbstractController
 {
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage): Response
     {
         $article = new Article();
@@ -80,6 +83,18 @@ class ArticleController extends AbstractController
 
             $article->setCreatedAt(new \DateTimeImmutable());
             $article->setAuthor($security->getUser());
+
+            // Create unique slug
+            $slugify = new Slugify;
+            $slug = $slugify->slugify($article->getTitle());
+
+            // Verify if slug is unique
+            $existingArticle = $articleRepository->findOneBy(['slug' => $slug]);
+            if ($existingArticle) {
+                $slug .= '-' . uniqid();
+            }
+
+            $article->setSlug($slug);
 
             // Check Upload
             /** @var UploadedFile $uploadedFile */
