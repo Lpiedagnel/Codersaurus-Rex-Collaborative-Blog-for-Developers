@@ -25,7 +25,8 @@
             <div class="row">
                 <div class="post__content col-12 col-md-9 fs-5">
                   <img class="img-fluid" src="{{ article.thumbnailUrl }}" alt="{{ article.title }}">
-                  {{ article.content }}
+                  <h1 class="display-5 text-center my-5">{{ article.title }}</h1>
+                  {{ article.content|raw }}
                 </div>
                 <!-- Similar posts -->
                 <aside class="post__aside col-12 col-md-3">

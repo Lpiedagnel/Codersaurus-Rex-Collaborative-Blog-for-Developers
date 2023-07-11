@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 #[Route('/article')]
 class ArticleController extends AbstractController
@@ -40,6 +41,7 @@ class ArticleController extends AbstractController
                     'placeholder' => 'Entre 10 et 100 caractères'
                 ],
                 'required' => true,
+                /*
                 'constraints' => [
                     new Length([
                         'min' => 10,
@@ -48,12 +50,14 @@ class ArticleController extends AbstractController
                         'maxMessage' => 'Le titre doit faire entre 10 et 100 caractères.',
                     ])
                 ]
+                */
             ])
             ->add('extract', TextType::class, [
                 'attr' => [
                     'placeholder' => 'Entre 30 et 100 caractères'
                 ],
                 'required' => true,
+                /*
                 'constraints' => [
                     new Length([
                         'min' => 30,
@@ -62,6 +66,7 @@ class ArticleController extends AbstractController
                         'maxMessage' => 'Le résumé de l\'article doit faire entre 30 et 100 caractères.',
                     ])
                 ]
+                */
             ])
             ->add('tags', ChoiceType::class, [
                 'choices' => [
@@ -81,18 +86,7 @@ class ArticleController extends AbstractController
                 'multiple' => true,
                 'expanded' => true
             ])
-            ->add('content', TextareaType::class, [
-                'attr' => [
-                    'placeholder' => 'Au moins 1 500 caractères',
-                    'autocomplete' => 'Hello world'
-                ],
-                'constraints' => [
-                    new Length([
-                        'min' => 1500,
-                        'minMessage' => 'L\'article doit faire au moins 1 500 caractères (ce qui correspond à environ 300 mots).',
-                    ])
-                ]
-            ])
+            ->add('content', CKEditorType::class)
             ->add('thumbnailUrl', FileType::class, [
                 'required' => true,
                 'mapped' => false,
@@ -117,6 +111,7 @@ class ArticleController extends AbstractController
                 'attr' => [
                     'placeholder' => 'Entre 40 et 60 caractères'
                 ],
+                /*
                 'constraints' => [
                     new Length([
                         'min' => 40,
@@ -125,11 +120,13 @@ class ArticleController extends AbstractController
                         'maxMessage' => 'La Meta Title doit faire entre 40 et 60 caractères.',
                     ])
                 ]
+                */
             ])
             ->add('meta_description', TextareaType::class, [
                 'attr' => [
                     'placeholder' => 'Entre 140 et 160 caractères'
                 ],
+                /*
                 'constraints' => [
                     new Length([
                         'min' => 140,
@@ -138,6 +135,7 @@ class ArticleController extends AbstractController
                         'maxMessage' => 'La Meta Description doit faire entre 140 et 160 caractères.',
                     ])
                 ]
+                */
             ])
             ->getForm();
 
