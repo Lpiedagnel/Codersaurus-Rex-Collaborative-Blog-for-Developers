@@ -202,6 +202,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_EDITOR')]
     public function edit(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
         $form = $this->createForm(ArticleType::class, $article);
@@ -220,6 +221,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_EDITOR')]
     public function delete(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {

@@ -26,7 +26,14 @@
                 <div class="post__content col-12 col-md-9 fs-5">
                   <img class="img-fluid" src="{{ article.thumbnailUrl }}" alt="{{ article.title }}">
                   <h1 class="display-5 text-center my-5">{{ article.title }}</h1>
+
+                  {# Edit button #}
+                  {% if is_granted('ROLE_EDITOR') %}
+                      <a href="{{ path('app_article_edit', { slug: article.slug } ) }}" class="btn btn-primary">Modifier l'article</a>
+                  {% endif %}
+
                   {{ article.content|raw }}
+                  
                 </div>
                 <!-- Similar posts -->
                 <aside class="post__aside col-12 col-md-3">
