@@ -29,7 +29,9 @@
 
                   {# Edit button #}
                   {% if is_granted('ROLE_EDITOR') %}
+                  <div class="mb-5">
                       <a href="{{ path('app_article_edit', { slug: article.slug } ) }}" class="btn btn-primary">Modifier l'article</a>
+                  </div>
                   {% endif %}
 
                   {{ article.content|raw }}

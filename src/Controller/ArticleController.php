@@ -26,7 +26,7 @@ class ArticleController extends AbstractController
     {
         $article = new Article();
 
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(ArticleType::class, $article, ['required' => true]);
 
         $form->handleRequest($request);
 
@@ -91,12 +91,26 @@ class ArticleController extends AbstractController
 
     #[Route('/{slug}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_EDITOR')]
-    public function edit(Request $request, Article $article, ArticleRepository $articleRepository): Response
+    public function edit(Request $request, Article $article, ArticleRepository $articleRepository, UploadImageService $uploadImage): Response
     {
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(ArticleType::class, $article, ['required' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Check Upload
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['thumbnailUrl']->getData();
+            
+            if ($uploadedFile) {
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
+                $fileName = $article->getSlug() . '.webp';
+                
+                $uploadImage->upload($uploadedFile, $destination, $fileName);
+                
+                $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
+            }
+
             $articleRepository->save($article, true);
 
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);

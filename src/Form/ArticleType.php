@@ -18,6 +18,7 @@ class ArticleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $isThumbnailIsRequired = $options['required'];
         $builder
         ->add('title', TextType::class, [
             'attr' => [
@@ -71,7 +72,7 @@ class ArticleType extends AbstractType
         ])
         ->add('content', CKEditorType::class)
         ->add('thumbnailUrl', FileType::class, [
-            'required' => false,
+            'required' => $isThumbnailIsRequired,
             'mapped' => false,
             'attr' => [
                 'enctype' => 'multipart/form-data'
