@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[Route('/article')]
 class ArticleController extends AbstractController
 {
+
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage, KernelInterface $kernel): Response
@@ -147,4 +148,16 @@ class ArticleController extends AbstractController
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/dashboard', name: 'app_article_dashboard', methods: ['GET'], priority: 2)]
+    #[IsGranted('ROLE_EDITOR')]
+    public function dashboard(ArticleRepository $articleRepository): Response 
+    {
+        $articles = $articleRepository->findAll();
+
+        return $this->render('article/dashboard.html.twig', [
+            'articles' => $articles
+        ]);
+    }
+
 }
