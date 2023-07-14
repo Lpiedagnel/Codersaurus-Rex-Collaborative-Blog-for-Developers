@@ -47,29 +47,15 @@
                         <h3 class="mt-3">Articles similaires</h3>
                         <hr>
                         <!-- Similar post -->
-                        <a href="{{ path('app_post_show') }}" class="text-decoration-none my-2">
+                        {% for similar in similarArticles %}
+                          <a href="{{ path('app_article_show', { slug: similar.slug }) }}" class="text-decoration-none my-2">
                             <div class="card">
                                 <div class="card-body">
-                                  <h5 class="card-title text-light">Comment centrer une Div ? &#10132;</h5>
+                                  <h5 class="card-title text-light">{{ similar.title }} &#10132;</h5>
                                 </div>
                             </div>
                         </a>
-                        <!-- Similar post -->
-                        <a href="{{ path('app_post_show') }}" class="text-decoration-none my-2">
-                            <div class="card">
-                                <div class="card-body">
-                                  <h5 class="card-title text-light">Comment coder un réseau social ? &#10132;</h5>
-                                </div>
-                            </div>
-                        </a>
-                        <!-- Similar post -->
-                        <a href="{{ path('app_post_show') }}" class="text-decoration-none my-2">
-                            <div class="card">
-                                <div class="card-body">
-                                  <h5 class="card-title text-light">Trouver un emploi en tant que Dev Junior ? &#10132;</h5>
-                                </div>
-                            </div>
-                        </a>
+                        {% endfor %}
                     </div>
                 </aside>
             </div>

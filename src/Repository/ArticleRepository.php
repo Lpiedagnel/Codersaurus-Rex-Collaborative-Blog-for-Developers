@@ -53,7 +53,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $query;
     }
 
-    public function findByTag(string $tag): array
+    public function findByTag(string $tag, int $limit = null): array
     {
         $queryBuilder = $this->createQueryBuilder('a');
         $queryBuilder
@@ -64,6 +64,10 @@ class ArticleRepository extends ServiceEntityRepository
                 )
             )
             ->andWhere('a.isValidated = true');
+
+        if ($limit !== null) {
+            $queryBuilder->setMaxResults($limit);
+        }
     
         return $queryBuilder->getQuery()->getResult();
 

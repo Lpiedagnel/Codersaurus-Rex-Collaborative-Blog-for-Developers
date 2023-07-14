@@ -70,11 +70,15 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article, UserRepository $userRepository): Response
+    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository): Response
     {
         $authorId = $article->getAuthor();
 
         $user = $userRepository->find($authorId);
+        $tags = $article->getTags();
+        $randomKey = array_rand($tags);
+        $randomTag = $tags[$randomKey];
+        $similarArticlesData = $articleRepository->findByTag($randomTag, 3);
 
         $author = [
             'id' => $user->getId(),
@@ -83,9 +87,20 @@ class ArticleController extends AbstractController
             'job' => $user->getJob(),
         ];
 
+        $similarArticles = [];
+        foreach ($similarArticlesData as $currentArticle) {
+            $currentArticle = [
+                'slug' => $currentArticle->getSlug(),
+                'title' => $currentArticle->getTitle()
+            ];
+
+            $similarArticles[] = $currentArticle;
+        }
+
         return $this->render('article/show.html.twig', [
             'article' => $article,
-            'author' => $author
+            'author' => $author,
+            'similarArticles' => $similarArticles
         ]);
     }
 
