@@ -27,6 +27,10 @@
                   <img class="img-fluid" src="{{ article.thumbnailUrl }}" alt="{{ article.title }}">
                   <h1 class="display-5 text-center my-5">{{ article.title }}</h1>
 
+                  {# If article not validated #}
+                  {% if article.isValidated != true %}
+                  <div class="alert alert-warning">Cet article est en cours de relecture par la rédaction ou n'a pas été validé par celle-ci. C'est pourquoi elle n'est pas mise en avant.</div>
+                  {% endif %}
                   {# Edit button #}
                   {% if is_granted('ROLE_EDITOR') %}
                   <div class="mb-5">

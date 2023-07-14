@@ -43,6 +43,7 @@ class ArticleRepository extends ServiceEntityRepository
     public function createFindLatest(int $limit = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
+            ->andWhere('a.isValidated = true')
             ->orderBy('a.created_at', 'DESC');
 
         if ($limit !== null) {
@@ -55,12 +56,14 @@ class ArticleRepository extends ServiceEntityRepository
     public function findByTag(string $tag): array
     {
         $queryBuilder = $this->createQueryBuilder('a');
-        $queryBuilder->where(
-            $queryBuilder->expr()->like(
-                'a.tags',
-                $queryBuilder->expr()->literal('%"' . $tag . '"%')
+        $queryBuilder
+            ->andWhere(
+                $queryBuilder->expr()->like(
+                    'a.tags',
+                    $queryBuilder->expr()->literal('%"' . $tag . '"%')
+                )
             )
-        );
+            ->andWhere('a.isValidated = true');
     
         return $queryBuilder->getQuery()->getResult();
 
