@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Cocur\Slugify\Slugify;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 #[Route('/article')]
@@ -138,7 +140,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_article_delete', methods: ['POST'])]
+    #[Route('/{slug}/delete', name: 'app_article_delete', methods: ['POST'])]
     #[IsGranted('ROLE_EDITOR')]
     public function delete(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
@@ -146,18 +148,34 @@ class ArticleController extends AbstractController
             $articleRepository->remove($article, true);
         }
 
-        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('success', "L'article a bien été supprimé.");
+
+        return $this->redirectToRoute('app_article_dashboard', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/dashboard', name: 'app_article_dashboard', methods: ['GET'], priority: 2)]
     #[IsGranted('ROLE_EDITOR')]
     public function dashboard(ArticleRepository $articleRepository): Response 
     {
-        $articles = $articleRepository->findAll();
+        $articles = $articleRepository->findBy([], ['isValidated' => 'ASC']);
 
         return $this->render('article/dashboard.html.twig', [
             'articles' => $articles
         ]);
+    }
+
+    #[Route('/{slug}', name: 'app_article_validation', methods: ['POST'])]
+    #[IsGranted('ROLE_EDITOR')]
+    public function validation(Request $request, Article $article, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('validation'. $article->getId(), $request->request->get('_token'))) {
+            $article->setIsValidated(true);
+            $entityManager->flush();
+        }
+
+        $this->addFlash('success', "L'article a bien été validé.");
+
+        return $this->redirectToRoute('app_article_dashboard', [], Response::HTTP_SEE_OTHER);
     }
 
 }
