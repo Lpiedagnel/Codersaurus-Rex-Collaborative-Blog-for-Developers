@@ -23,13 +23,7 @@
                     </div>
                     {# Validation #}
                     <div class="col-10 col-lg-2 text-center">
-                        {% if article.isValidated == true %}
-                            {# Invalidate #}
-                            <a href="{{ path('app_article_show', { 'slug': article.slug }) }}" class="btn btn-success my-1 my-lg-0">Validé</a>
-                        {% else %}
-                            {# Validate #}
-                            {% include "article/_validation_form.html.twig" %}
-                        {% endif %}
+                        {% include "article/_validation_form.html.twig" %}
                     </div>
                     {# Show #}
                     <div class="col-10 col-lg-2 text-center">

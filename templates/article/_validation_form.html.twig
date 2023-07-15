@@ -1,4 +1,15 @@
-<form method="post" action="{{ path('app_article_validation', {'slug': article.slug}) }}" onsubmit="return confirm('Voulez-vous confirmer cet article et mettre en avant celui-ci ?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('validation' ~ article.id) }}">
-    <button class="btn btn-danger">À valider</button>
-</form>
+
+
+{% if article.isValidated == true %}
+    {# Invalidate #}
+    <form method="post" action="{{ path('app_article_validation', {'slug': article.slug}) }}" onsubmit="return confirm('Voulez-vous annuler la validation de cet article et ne peut plus mettre en avant celui-ci ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('validation' ~ article.id) }}">
+        <button class="btn btn-success">Validé</button>
+    </form>
+{% else %}
+    {# Validate #}
+    <form method="post" action="{{ path('app_article_validation', {'slug': article.slug}) }}" onsubmit="return confirm('Voulez-vous confirmer cet article et mettre en avant celui-ci ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('validation' ~ article.id) }}">
+        <button class="btn btn-danger">À valider</button>
+    </form>
+{% endif %}

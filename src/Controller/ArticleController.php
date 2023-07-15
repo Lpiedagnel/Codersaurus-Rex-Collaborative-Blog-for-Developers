@@ -169,11 +169,16 @@ class ArticleController extends AbstractController
     public function validation(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('validation'. $article->getId(), $request->request->get('_token'))) {
-            $article->setIsValidated(true);
+
+            if ($article->isIsValidated() === false) {
+                $article->setIsValidated(true);
+                $this->addFlash('success', "L'article a bien été validé.");
+            } else {
+                $article->setIsValidated(false);
+                $this->addFlash('error', "L'article n'est plus validé.");
+            } 
             $entityManager->flush();
         }
-
-        $this->addFlash('success', "L'article a bien été validé.");
 
         return $this->redirectToRoute('app_article_dashboard', [], Response::HTTP_SEE_OTHER);
     }
