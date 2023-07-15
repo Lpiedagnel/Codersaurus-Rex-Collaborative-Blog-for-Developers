@@ -153,7 +153,7 @@ class ArticleController extends AbstractController
         return $this->redirectToRoute('app_article_dashboard', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/dashboard', name: 'app_article_dashboard', methods: ['GET'], priority: 2)]
+    #[Route('/dashboard', name: 'app_article_dashboard', methods: ['GET'], priority: 3)]
     #[IsGranted('ROLE_EDITOR')]
     public function dashboard(ArticleRepository $articleRepository): Response 
     {
@@ -181,6 +181,29 @@ class ArticleController extends AbstractController
         }
 
         return $this->redirectToRoute('app_article_dashboard', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/search', name: 'app_article_search', methods: ['GET'], priority: 2)]
+    public function search(ArticleRepository $articleRepository): Response 
+    {
+        $articlesData = $articleRepository->findAll();
+
+        $articles = [];
+        foreach ($articlesData as $article) {
+            $article = [
+                'thumbnailUrl' => $article->getThumbnailUrl(),
+                'title' => $article->getTitle(),
+                'slug' => $article->getSlug(),
+                'author' => $article->getAuthor()->getUsername(),
+                'tags' => $article->getTags()
+            ];
+
+            $articles[] = $article;
+        }
+
+        return $this->render('article/search.html.twig', [
+            'articles' => $articles
+        ]);
     }
 
 }

@@ -26,6 +26,9 @@
                   <li><a class="dropdown-item" href="#">Études de cas</a></li>
                 </ul>
               </li>
+              <li class="nav-item">
+                <a class="main-navbar__link nav-link" aria-current="page" href="{{ path('app_article_search') }}">Rechercher</a>
+              </li>
               {% if is_granted('ROLE_EDITOR') %}
                 <li class="nav-item">
                     <a class="nav-link text-info" href="{{ path('app_article_dashboard')}}">Dashboard</a>
