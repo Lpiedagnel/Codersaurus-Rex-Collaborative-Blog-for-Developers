@@ -105,6 +105,17 @@ class ArticleRepository extends ServiceEntityRepository
     
         return $allTags;
     }
+
+    public function findWithSearch(string $search): array
+    {
+        $queryBuilder = $this->createQueryBuilder('article')
+            ->andWhere('article.content LIKE :searchTerm OR article.title LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $search . '%');
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
     
 
 

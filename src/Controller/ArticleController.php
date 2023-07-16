@@ -184,10 +184,23 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/search', name: 'app_article_search', methods: ['GET'], priority: 2)]
-    public function search(ArticleRepository $articleRepository): Response 
+    public function search(Request $request, ArticleRepository $articleRepository): Response 
     {
-        $articlesData = $articleRepository->findAll();
+        $articlesData = [];
 
+        $searchTerms = $request->query->get('search');
+
+        if ($searchTerms !== null && $searchTerms !== '') {
+            $articlesData = $articleRepository->findWithSearch($searchTerms);
+
+            if (empty($articlesData)) {
+                $this->addFlash('error', "Aucun article a été trouvé en lien avec votre recherche.");
+            }
+            
+        } elseif ($searchTerms !== null && $searchTerms === '') {
+            $this->addFlash('error', 'Vous devez indiquer ce que vous recherchez dans la barre de recherche.');
+        }
+    
         $articles = [];
         foreach ($articlesData as $article) {
             $article = [
@@ -200,6 +213,7 @@ class ArticleController extends AbstractController
 
             $articles[] = $article;
         }
+
 
         return $this->render('article/search.html.twig', [
             'articles' => $articles
