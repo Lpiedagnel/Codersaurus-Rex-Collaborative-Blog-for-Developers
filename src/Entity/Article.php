@@ -57,6 +57,10 @@ class Article
     #[ORM\Column]
     private ?bool $isValidated = false;
 
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $categories = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -226,6 +230,18 @@ class Article
     public function setIsValidated(bool $isValidated): self
     {
         $this->isValidated = $isValidated;
+
+        return $this;
+    }
+
+    public function getCategories(): ?Category
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(?Category $categories): self
+    {
+        $this->categories = $categories;
 
         return $this;
     }
