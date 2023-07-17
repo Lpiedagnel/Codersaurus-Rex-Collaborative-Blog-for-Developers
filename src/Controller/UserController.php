@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\UploadImageService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -93,7 +94,8 @@ class UserController extends AbstractController
             'createdAt' => $userData->getCreatedAt(),
             'birthday' => $userData->getBirthday(),
             'avatar_link' => $userData->getAvatarLink(),
-            'role' => $userData->getRoles()
+            'role' => $userData->getRoles(),
+            'articles' => $userData->getArticles()
         ];
 
         return $this->render('user/show.html.twig', [
@@ -103,7 +105,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST']), IsGranted('ROLE_USER')]
-    public function edit(Request $request, User $user, UserRepository $userRepository, Security $security): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, Security $security, UploadImageService $uploadImage): Response
     {
         // Check auth
         $this->userAuthorization->checkUserAuthorization($user);
@@ -152,14 +154,11 @@ class UserController extends AbstractController
 
             if ($uploadedFile) {
                 $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/avatars';
-    
-                $newFileName = $user->getId() . '.webp';
-    
-                $uploadedFile->move(
-                    $destination,
-                    $newFileName
-                );
-                $user->setAvatarLink('/uploads/avatars/' . $newFileName);
+                $fileName = $user->getId() . '.webp';
+
+                $uploadImage->upload($uploadedFile, $destination, $fileName);
+
+                $user->setAvatarLink('/uploads/avatars/' . $fileName);
             }
 
             $userRepository->save($user, true);

@@ -1,39 +1,45 @@
 {% extends "base.html.twig" %}
 
+{% block title %}{{ article.title }}{% endblock %}
+
 {% block body %}
       <div class="container py-3">
         <!-- Header -->
         <header class="post__header d-flex flex-column text-center">
-            <h1>Comment centrer une Div ?</h1>
-            <img src="./images/author.webp" class="img-thumbnail rounded-circle mx-auto" alt="Auteur de l'article">
-            <h2 class="fw-bold">John Doe</h2>
-            <h3 class="text-muted fw-lighter fst-italic">Développeur Symfony</h3>
+            <h1>{{ article.title }}</h1>
+            <img src="{{ author.avatar_link }}" class="img-thumbnail rounded-circle mx-auto" alt="Auteur de l'article">
+            <a class="text-decoration-none" href="{{ path('app_user_show', { id: author.id }) }}">
+              <h2 class="fw-bold">{{ author.username }}</h2>
+            </a>
+            {% if author.job %}
+                <h3 class="text-muted fw-lighter fst-italic">{{ author.job }}</h3>
+            {% endif %}
             <hr>
             <aside class="d-flex flex-row align-items-center justify-content-between text-muted fst-italic fs-5">
-                <p>HTML, CSS</p>
-                <p>Le 24 Mars 2023</p>
+                <p>{{ article.tags|join(', ') }}</p>
+                <p>{{ article.createdAt|ago(locale='fr') }}</p>
             </aside>
         </header>
         <!-- Main -->
         <main class="post__main">
             <div class="row">
                 <div class="post__content col-12 col-md-9 fs-5">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur laudantium necessitatibus, pariatur voluptatum quae saepe incidunt. Adipisci deleniti possimus modi tempora iusto, inventore ut dolorem, sunt nostrum dolore beatae eaque.</p>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatum placeat ea dolor temporibus labore ipsam molestias non, laboriosam saepe architecto nobis delectus exercitationem ullam porro deleniti corrupti asperiores aliquam?</p>
-                    <img src="https://picsum.photos/500" class="img-fluid" alt="Image">
-                    <h2>C'est très difficile !</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius delectus corrupti accusamus recusandae commodi pariatur rerum. Suscipit voluptas adipisci fugiat laboriosam vel magnam similique quas, atque, quam voluptatem praesentium illo.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores recusandae, tempore quia ea aliquam neque, cupiditate sint nesciunt molestiae necessitatibus adipisci. Nam consequatur dolor ipsa quasi dicta veritatis eligendi ducimus!</p>
-                    <img src="https://picsum.photos/250" class="img-fluid" alt="Image">
-                    <h2>Utiliser les arts et arcanes du CSS</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum quasi quia non, consectetur tempora quae nihil alias id aliquam. Accusantium corporis maiores nulla exercitationem nam quae architecto alias. Maiores, officia.</p>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam quod totam laborum nisi numquam distinctio nemo ullam eius qui temporibus dignissimos reiciendis magnam cum, maiores quaerat, deleniti in fugiat iure.</p>
-                    <h2>Quelques mots pour terminer</h2>
-                    <code>
-                        div { margin: 0 auto; }                   
-                    </code>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis nobis id reiciendis, odio deserunt velit sit corporis, consectetur debitis rerum totam, maxime suscipit eveniet alias accusamus qui reprehenderit consequuntur dolores.</p>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis quod totam provident id impedit fugit animi, quam distinctio temporibus doloribus eius. Exercitationem in totam aperiam velit ducimus quae nihil harum.</p>
+                  <img class="img-fluid" src="{{ article.thumbnailUrl }}" alt="{{ article.title }}">
+                  <h1 class="display-5 text-center my-5">{{ article.title }}</h1>
+
+                  {# If article not validated #}
+                  {% if article.isValidated != true %}
+                  <div class="alert alert-warning">Cet article est en cours de relecture par la rédaction ou n'a pas été validé par celle-ci. C'est pourquoi elle n'est pas mise en avant.</div>
+                  {% endif %}
+                  {# Edit button #}
+                  {% if is_granted('ROLE_EDITOR') %}
+                  <div class="mb-5">
+                      <a href="{{ path('app_article_edit', { slug: article.slug } ) }}" class="btn btn-primary">Modifier l'article</a>
+                  </div>
+                  {% endif %}
+
+                  {{ article.content|raw }}
+                  
                 </div>
                 <!-- Similar posts -->
                 <aside class="post__aside col-12 col-md-3">
@@ -41,29 +47,15 @@
                         <h3 class="mt-3">Articles similaires</h3>
                         <hr>
                         <!-- Similar post -->
-                        <a href="{{ path('app_post_show') }}" class="text-decoration-none my-2">
+                        {% for similar in similarArticles %}
+                          <a href="{{ path('app_article_show', { slug: similar.slug }) }}" class="text-decoration-none my-2">
                             <div class="card">
                                 <div class="card-body">
-                                  <h5 class="card-title text-light">Comment centrer une Div ? &#10132;</h5>
+                                  <h5 class="card-title text-light">{{ similar.title }} &#10132;</h5>
                                 </div>
                             </div>
                         </a>
-                        <!-- Similar post -->
-                        <a href="{{ path('app_post_show') }}" class="text-decoration-none my-2">
-                            <div class="card">
-                                <div class="card-body">
-                                  <h5 class="card-title text-light">Comment coder un réseau social ? &#10132;</h5>
-                                </div>
-                            </div>
-                        </a>
-                        <!-- Similar post -->
-                        <a href="{{ path('app_post_show') }}" class="text-decoration-none my-2">
-                            <div class="card">
-                                <div class="card-body">
-                                  <h5 class="card-title text-light">Trouver un emploi en tant que Dev Junior ? &#10132;</h5>
-                                </div>
-                            </div>
-                        </a>
+                        {% endfor %}
                     </div>
                 </aside>
             </div>

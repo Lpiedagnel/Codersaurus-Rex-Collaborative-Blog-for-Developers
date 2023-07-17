@@ -8,36 +8,20 @@
           <h2>Un blog collaboratif sur le codage, par les codeurs, pour les codeurs.</h2>
         </div>
       </div>
-      <!-- Tags -->
-      <section class="container tags">
-        <h3 class="mt-3 fw-bolder">HTML</h3>
-        <hr class="my-3">
-          <div class="d-flex flex-row align-items-start flex-wrap gap-4">
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace active">HTML</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">CSS</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">JavaScript</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">PHP</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Python</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Ruby</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Java</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">WordPress</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Prestashop</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Reconversion</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Lifestyle</a>
-            <a href="#" class="btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace">Emplois</a>
-          </div>
-      </section>
+      {% include "article/_tags.html.twig" %}
       <!-- Articles -->
       <main class="articles container">
         <div class="row mt-5">
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
-            {% include "post/_article-card.html.twig" %}
+        {% for article in articles %}
+            {% include "article/_article-card.html.twig" %}
+        {% endfor %}
         </div>
         <!-- See more articles -->
         <div class="d-flex justify-content-center my-4">
-          <a href="#" class="fw-bold text-decoration-none fs-5">Plus d'articles &#10132;</a>
+        {% if currentTag == "Les derniers articles" %}
+          {{ pagerfanta(articles) }}
+        {% endif %}
+          {# <a href="#" class="fw-bold text-decoration-none fs-5">Plus d'articles &#10132;</a> #}
         </div>
       </main>
 {% endblock %}
