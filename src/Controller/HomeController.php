@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,8 +16,12 @@ use Pagerfanta\Pagerfanta;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(ArticleRepository $articleRepository, Request $request): Response
+    public function index(ArticleRepository $articleRepository, Request $request, CategoryRepository $categoryRepository): Response
     {
+        $categories = $categoryRepository->findAllCategoriesName();
+
+        dd($categories);
+
         $tags = $articleRepository->getAllTags();
 
         $tag = $request->query->get('tag');
