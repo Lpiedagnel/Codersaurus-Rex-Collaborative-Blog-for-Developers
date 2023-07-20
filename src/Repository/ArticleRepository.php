@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
@@ -40,70 +41,23 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-    public function createFindLatest(int $limit = null): QueryBuilder
+    public function createFindLatest(int $limit = null, String $categoryName = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
             ->andWhere('a.isValidated = true')
             ->orderBy('a.created_at', 'DESC');
+
+        if ($categoryName !== null) {
+            $query
+                ->andWhere(':category MEMBER OF a.categories')
+                ->setParameter('category', $categoryName);
+        }
 
         if ($limit !== null) {
             $query->setMaxResults($limit);
         }
 
         return $query;
-    }
-
-    public function findByTag(string $tag, int $limit = null): array
-    {
-        $queryBuilder = $this->createQueryBuilder('a');
-        $queryBuilder
-            ->andWhere(
-                $queryBuilder->expr()->like(
-                    'a.tags',
-                    $queryBuilder->expr()->literal('%"' . $tag . '"%')
-                )
-            )
-            ->andWhere('a.isValidated = true');
-
-        if ($limit !== null) {
-            $queryBuilder->setMaxResults($limit);
-        }
-    
-        return $queryBuilder->getQuery()->getResult();
-
-        // Other try with SQL
-        /*
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = "
-            SELECT *
-            FROM article
-            WHERE JSON_CONTAINS(tags, :tag, '$')
-            ";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindValue('tag', $tag);
-        $result = $stmt->executeQuery();
-    
-        return $result->fetchAll();
-        */
-    }
-
-    public function getAllTags(): array
-    {
-        $query = $this->createQueryBuilder('a')
-            ->select('a.tags')
-            ->getQuery();
-    
-        $result = $query->getResult();
-
-        // Get the "key" tag
-        $tags = array_column($result, 'tags');
-    
-        // Merge all array and delete duplicate. The spread operator "..." unpack arrays.
-        $allTags = array_unique(array_merge(...$tags));
-
-        sort($allTags);
-    
-        return $allTags;
     }
 
     public function findWithSearch(string $search): array

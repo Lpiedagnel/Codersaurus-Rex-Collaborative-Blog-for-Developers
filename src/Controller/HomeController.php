@@ -18,41 +18,34 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(ArticleRepository $articleRepository, Request $request, CategoryRepository $categoryRepository): Response
     {
+        // Get categories
         $categories = $categoryRepository->findAllCategoriesName();
+        $currentCategory = $request->query->get('category');
 
-        dd($categories);
-
-        $tags = $articleRepository->getAllTags();
-
-        $tag = $request->query->get('tag');
-
-        
-        if ($tag === null) {
-            $tagName = "Les derniers articles";
-
+        // Get articles
+        if ($currentCategory === null) {
+            // Get last articles
             $queryBuilder = $articleRepository->createFindLatest();
-
-            $adapter = new QueryAdapter($queryBuilder);
-
-            $articles = Pagerfanta::createForCurrentPageWithMaxPerPage(
-                $adapter,
-                $request->query->get('page', 1),
-                4
-            );
+            $categoryTitle = "Les derniers articles";
 
         } else {
-            $tagName = $tag;
-
-            $articles = $articleRepository->findByTag($tag);
+            $queryBuilder = $articleRepository->createFindLatest(null, $currentCategory);
+            $categoryTitle = $currentCategory;
         }
 
+        // Add pagination
+        $adapter = new QueryAdapter($queryBuilder);
+        $articles = Pagerfanta::createForCurrentPageWithMaxPerPage(
+            $adapter,
+            $request->query->get('page', 1),
+            4
+        );
 
-        
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
             'articles' => $articles,
-            'tags' => $tags,
-            'currentTag' => $tagName
+            'tags' => $categories,
+            'currentTag' => $categoryTitle
         ]);
     }
 }

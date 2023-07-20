@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
         ArticleFactory::createMany(50, function() {
             return [
                 'author' => UserFactory::random(),
-                'categories' => CategoryFactory::random()
+                'categories' => [CategoryFactory::random()]
             ];
         });
 

@@ -18,7 +18,7 @@ class Category
     #[ORM\Column(length: 40)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Article::class)]
+    #[ORM\ManyToMany(targetEntity: Article::class, inversedBy: 'categories')]
     private Collection $articles;
 
     public function __construct()
@@ -55,7 +55,6 @@ class Category
     {
         if (!$this->articles->contains($article)) {
             $this->articles->add($article);
-            $article->setCategories($this);
         }
 
         return $this;
@@ -63,12 +62,7 @@ class Category
 
     public function removeArticle(Article $article): self
     {
-        if ($this->articles->removeElement($article)) {
-            // set the owning side to null (unless already changed)
-            if ($article->getCategories() === $this) {
-                $article->setCategories(null);
-            }
-        }
+        $this->articles->removeElement($article);
 
         return $this;
     }
