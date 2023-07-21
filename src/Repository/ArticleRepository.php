@@ -76,6 +76,17 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findArticlesWithCategory(Category $category, int $limit = 3): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.categories', 'c')
+            ->where('c = :category')
+            ->setParameter('category', $category)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
     
 
 

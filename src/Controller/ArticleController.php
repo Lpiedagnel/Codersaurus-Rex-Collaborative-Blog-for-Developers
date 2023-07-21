@@ -18,6 +18,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Doctrine\Common\Collections\Collection;
 
 #[Route('/article')]
 class ArticleController extends AbstractController
@@ -78,12 +79,6 @@ class ArticleController extends AbstractController
         $authorId = $article->getAuthor();
 
         $user = $userRepository->find($authorId);
-        /*
-        $tags = $article->getTags();
-        $randomKey = array_rand($tags);
-        $randomTag = $tags[$randomKey];
-        $similarArticlesData = $articleRepository->findByTag($randomTag, 3);
-        */
 
         $author = [
             'id' => $user->getId(),
@@ -92,8 +87,14 @@ class ArticleController extends AbstractController
             'job' => $user->getJob(),
         ];
 
-        /*
+        // Select randomly one category from the article and get similar articles.
+        $categories = $article->getCategories()->toArray();
+        $randomCategory = $categories[array_rand($categories)];
+        $similarArticlesData = $articleRepository->findArticlesWithCategory($randomCategory);
+        
+        // Get only the useful info
         $similarArticles = [];
+
         foreach ($similarArticlesData as $currentArticle) {
             $currentArticle = [
                 'slug' => $currentArticle->getSlug(),
@@ -102,12 +103,12 @@ class ArticleController extends AbstractController
 
             $similarArticles[] = $currentArticle;
         }
-        */
 
+        // Render
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'author' => $author,
-            // 'similarArticles' => $similarArticles
+            'similarArticles' => $similarArticles
         ]);
     }
 

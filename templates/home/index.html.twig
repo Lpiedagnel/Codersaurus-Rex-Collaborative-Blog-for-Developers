@@ -18,9 +18,7 @@
         </div>
         <!-- See more articles -->
         <div class="d-flex justify-content-center my-4">
-        {% if currentTag == "Les derniers articles" %}
-          {{ pagerfanta(articles) }}
-        {% endif %}
+          {{ pagerfanta(articles) | raw }}
           {# <a href="#" class="fw-bold text-decoration-none fs-5">Plus d'articles &#10132;</a> #}
         </div>
       </main>
