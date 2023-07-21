@@ -78,10 +78,12 @@ class ArticleController extends AbstractController
         $authorId = $article->getAuthor();
 
         $user = $userRepository->find($authorId);
+        /*
         $tags = $article->getTags();
         $randomKey = array_rand($tags);
         $randomTag = $tags[$randomKey];
         $similarArticlesData = $articleRepository->findByTag($randomTag, 3);
+        */
 
         $author = [
             'id' => $user->getId(),
@@ -90,6 +92,7 @@ class ArticleController extends AbstractController
             'job' => $user->getJob(),
         ];
 
+        /*
         $similarArticles = [];
         foreach ($similarArticlesData as $currentArticle) {
             $currentArticle = [
@@ -99,11 +102,12 @@ class ArticleController extends AbstractController
 
             $similarArticles[] = $currentArticle;
         }
+        */
 
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'author' => $author,
-            'similarArticles' => $similarArticles
+            // 'similarArticles' => $similarArticles
         ]);
     }
 

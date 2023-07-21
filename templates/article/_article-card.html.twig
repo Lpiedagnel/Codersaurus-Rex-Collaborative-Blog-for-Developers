@@ -13,7 +13,9 @@
                 <p class="col-6 text-decoration-none fw-bold card-author">Par {{ article.author.username }}</p>
                 <p class="col-6 text-muted fst-italic">{{ article.createdAt|ago(locale='fr') }}</p>
                 <p class="col-12">
-                    {{ article.tags|join(', ') }}
+                    {% for category in article.categories %}
+                        {{ category.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
                 </p>
             </aside>
             </div>

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 
@@ -18,8 +19,11 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $entityManager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager; 
         parent::__construct($registry, Article::class);
     }
 
@@ -48,9 +52,11 @@ class ArticleRepository extends ServiceEntityRepository
             ->orderBy('a.created_at', 'DESC');
 
         if ($categoryName !== null) {
+            $category = $this->entityManager->getRepository(Category::class)->findOneBy(['name' => $categoryName]);
+
             $query
                 ->andWhere(':category MEMBER OF a.categories')
-                ->setParameter('category', $categoryName);
+                ->setParameter('category', $category);
         }
 
         if ($limit !== null) {
