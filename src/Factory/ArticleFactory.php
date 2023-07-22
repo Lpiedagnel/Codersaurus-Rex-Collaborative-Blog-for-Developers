@@ -36,7 +36,27 @@ final class ArticleFactory extends ModelFactory
         "Apprendre le JavaScript",
         "WordPress est-il utile en 2023 ?",
         "S'empaler avec Drupal",
-        "Faut-il se réorienter en Dev Web ?"
+        "Faut-il se réorienter en Dev Web ?",
+        "Les meilleures pratiques en matière de responsive design pour les sites Web modernes",
+        "Les fondamentaux du HTML5 : tout ce que vous devez savoir",
+        "Les secrets du CSS Grid pour créer des mises en page complexes",
+        "Comment optimiser les performances de votre site Web pour une vitesse maximale",
+        "Les bases du JavaScript : initiation à la programmation côté client",
+        "Les meilleures bibliothèques JavaScript pour simplifier votre développement Web",
+        "Créez un site Web professionnel avec Bootstrap : un guide étape par étape",
+        "Le guide complet du SEO pour améliorer le classement de votre site sur les moteurs de recherche",
+        "Comment intégrer des animations CSS époustouflantes dans vos projets Web",
+        "Développement Web sécurisé : conseils pour protéger votre site contre les attaques",
+        "Les meilleures pratiques pour concevoir une expérience utilisateur exceptionnelle",
+        "Introduction à PHP : le langage de programmation côté serveur incontournable",
+        "Comment créer une application Web réactive avec React.js",
+        "Découvrez les avantages de l'utilisation de Vue.js dans vos projets Web",
+        "Les tendances du design Web à suivre en 2023",
+        "Introduction à Docker : facilitez le déploiement de vos applications Web",
+        "Les bases du développement Web avec Django : un framework puissant en Python",
+        "Comment gérer efficacement les formulaires dans le développement Web",
+        "Les étapes pour construire un site Web e-commerce réussi",
+        "L'avenir du développement Web : explorer les technologies émergentes"
     ];
 
     const THUMBNAILS = [
@@ -44,10 +64,6 @@ final class ArticleFactory extends ModelFactory
         "/uploads/thumbnails/article-2.webp",
         "/uploads/thumbnails/article-3.webp",
         "/uploads/thumbnails/article-4.webp"
-    ];
-
-    const TAGS = [
-        "HTML", "CSS", "JavaScript", "PHP", "Python", "Ruby", "Java", "WordPress", "Prestashop", "Reconversion", "Lifestyle", "Emplois"
     ];
 
     /**
@@ -79,7 +95,6 @@ final class ArticleFactory extends ModelFactory
             'created_at' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'meta_description' => self::faker()->text(255),
             'meta_title' => self::faker()->text(100),
-            'tags' => self::faker()->randomElements(self::TAGS, 3),
             'thumbnail_url' => self::faker()->randomElement(self::THUMBNAILS),
             'title' => self::faker()->randomElement(self::TITLES),
             'views_count' => self::faker()->randomNumber(),

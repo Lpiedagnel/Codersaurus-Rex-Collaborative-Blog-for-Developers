@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Article;
+use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 
@@ -52,21 +54,9 @@ class ArticleType extends AbstractType
             ]
             */
         ])
-        ->add('tags', ChoiceType::class, [
-            'choices' => [
-                'HTML' => 'HTML',
-                'CSS' => 'CSS',
-                "JavaScript" => "JavaScript",
-                "PHP" => "PHP", 
-                "Python" => "Python", 
-                "Ruby" => "Ruby", 
-                "Java" => "Java", 
-                "WordPress" => "WordPress", 
-                "Prestashop" => "Prestashop", 
-                "Reconversion" => "Reconversion", 
-                "Lifestyle" => "Lifestyle", 
-                "Emplois" => "Emplois"
-            ],
+        ->add('categories', EntityType::class, [
+            'class' => Category::class,
+            'choice_label' => 'name',
             'multiple' => true,
             'expanded' => true
         ])

@@ -35,7 +35,7 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             // Create unique slug
             $slugify = new Slugify;
             $slug = $slugify->slugify($article->getTitle());
@@ -45,6 +45,12 @@ class ArticleController extends AbstractController
             $slug .= $existingArticle ? '-' . uniqid() : '';
             
             $article->setSlug($slug);
+
+            // Set categories
+            $selectedCategories = $form['categories']->getData();
+            foreach ($selectedCategories as $category) {
+                $article->addCategory($category);
+            }
             
             // Check Upload
             /** @var UploadedFile $uploadedFile */
@@ -213,7 +219,7 @@ class ArticleController extends AbstractController
                 'title' => $article->getTitle(),
                 'slug' => $article->getSlug(),
                 'author' => $article->getAuthor()->getUsername(),
-                'tags' => $article->getTags()
+                'categories' => $article->getCategories()
             ];
 
             $articles[] = $article;
