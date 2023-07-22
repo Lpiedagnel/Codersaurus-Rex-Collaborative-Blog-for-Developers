@@ -99,6 +99,7 @@ final class ArticleFactory extends ModelFactory
             'title' => self::faker()->randomElement(self::TITLES),
             'views_count' => self::faker()->randomNumber(),
             'slug' => self::faker()->slug(),
+            'views_count' => self::faker()->numberBetween(0, 1000),
             'is_validated' => true
         ];
     }
