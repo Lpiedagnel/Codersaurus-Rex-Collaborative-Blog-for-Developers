@@ -1,6 +1,8 @@
 <?php
 
-namespace App\EventSubcriber;
+// src/Event/ArticleViewSubscriber
+
+namespace App\EventSubscriber;
 
 use App\Event\ArticleViewEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,6 +28,8 @@ class ArticleViewSubscriber implements EventSubscriberInterface
     {
         $article = $event->getArticle();
         $articleId = $article->getId();
+
+        dd('View count incremented for article: ' . $article->getId());
 
         // Check session if article was already view by the user. Prevent spamming.
         if (!$this->session->has('viewed_articles')) {

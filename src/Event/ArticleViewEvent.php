@@ -1,5 +1,7 @@
 <?php
 
+// src/Event/ArticleViewEvent.php
+
 namespace App\Event;
 
 use App\Entity\Article;
