@@ -7,6 +7,7 @@ use App\Event\ArticleViewEvent;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
+use App\Service\ArticleViewCounter;
 use App\Service\UploadImageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -82,7 +83,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository, EventDispatcherEventDispatcherInterface $eventDispatcher): Response
+    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository, ArticleViewCounter $articleViewCounter): Response
     {
         $authorId = $article->getAuthor();
 
@@ -113,10 +114,8 @@ class ArticleController extends AbstractController
         }
 
         // Add view count
-        $event = new ArticleViewEvent($article);
-        $eventDispatcher->dispatch($event, ArticleViewEvent::class);
+        $articleViewCounter->incrementViewsCount($article);
         
-
         // Render
         return $this->render('article/show.html.twig', [
             'article' => $article,
