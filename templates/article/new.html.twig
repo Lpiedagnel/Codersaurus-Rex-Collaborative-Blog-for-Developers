@@ -75,6 +75,9 @@
                 }) }}
             {% endfor %}
         </div>
+        {% if form_errors(form.categories) %}
+            <div class="text-danger">{{ form_errors(form.categories) }}</div>
+        {% endif %}
 
         {# Content #}
         <div class="mb-4">

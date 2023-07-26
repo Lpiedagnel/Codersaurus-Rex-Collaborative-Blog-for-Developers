@@ -59,7 +59,10 @@ class ArticleType extends AbstractType
             'choice_label' => 'name',
             'multiple' => true,
             'expanded' => true,
-            'by_reference' => false
+            'by_reference' => false,
+            'required' => true,
+            'placeholder' => "Choisissez au moins une catégorie.",
+            'empty_data' => null
         ])
         ->add('content', CKEditorType::class)
         ->add('thumbnailUrl', FileType::class, [
