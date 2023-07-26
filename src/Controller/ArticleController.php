@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Event\ArticleViewEvent;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
+use App\Service\ArticleViewCounter;
 use App\Service\UploadImageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -18,6 +20,8 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcherEventDispatcherInterface;
 
 #[Route('/article')]
 class ArticleController extends AbstractController
@@ -34,7 +38,7 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             // Create unique slug
             $slugify = new Slugify;
             $slug = $slugify->slugify($article->getTitle());
@@ -44,6 +48,12 @@ class ArticleController extends AbstractController
             $slug .= $existingArticle ? '-' . uniqid() : '';
             
             $article->setSlug($slug);
+
+            // Set categories
+            $selectedCategories = $form['categories']->getData();
+            foreach ($selectedCategories as $category) {
+                $article->addCategory($category);
+            }
             
             // Check Upload
             /** @var UploadedFile $uploadedFile */
@@ -73,15 +83,11 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository): Response
+    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository, ArticleViewCounter $articleViewCounter): Response
     {
         $authorId = $article->getAuthor();
 
         $user = $userRepository->find($authorId);
-        $tags = $article->getTags();
-        $randomKey = array_rand($tags);
-        $randomTag = $tags[$randomKey];
-        $similarArticlesData = $articleRepository->findByTag($randomTag, 3);
 
         $author = [
             'id' => $user->getId(),
@@ -90,7 +96,14 @@ class ArticleController extends AbstractController
             'job' => $user->getJob(),
         ];
 
+        // Select randomly one category from the article and get similar articles.
+        $categories = $article->getCategories()->toArray();
+        $randomCategory = $categories[array_rand($categories)];
+        $similarArticlesData = $articleRepository->findArticlesWithCategory($randomCategory);
+        
+        // Get only the useful info
         $similarArticles = [];
+
         foreach ($similarArticlesData as $currentArticle) {
             $currentArticle = [
                 'slug' => $currentArticle->getSlug(),
@@ -100,6 +113,10 @@ class ArticleController extends AbstractController
             $similarArticles[] = $currentArticle;
         }
 
+        // Add view count
+        $articleViewCounter->incrementViewsCount($article);
+        
+        // Render
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'author' => $author,
@@ -208,7 +225,7 @@ class ArticleController extends AbstractController
                 'title' => $article->getTitle(),
                 'slug' => $article->getSlug(),
                 'author' => $article->getAuthor()->getUsername(),
-                'tags' => $article->getTags()
+                'categories' => $article->getCategories()
             ];
 
             $articles[] = $article;

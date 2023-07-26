@@ -16,7 +16,11 @@
             {% endif %}
             <hr>
             <aside class="d-flex flex-row align-items-center justify-content-between text-muted fst-italic fs-5">
-                <p>{{ article.tags|join(', ') }}</p>
+                <p>
+                  {% for category in article.categories %}
+                      {{ category.name }}{% if not loop.last %}, {% endif %}
+                  {% endfor %}
+                </p>
                 <p>{{ article.createdAt|ago(locale='fr') }}</p>
             </aside>
         </header>
@@ -54,7 +58,7 @@
                                   <h5 class="card-title text-light">{{ similar.title }} &#10132;</h5>
                                 </div>
                             </div>
-                        </a>
+                          </a>
                         {% endfor %}
                     </div>
                 </aside>

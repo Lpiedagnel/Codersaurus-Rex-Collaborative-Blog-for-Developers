@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,9 +18,6 @@ class Article
 
     #[ORM\Column(length: 100)]
     private ?string $title = null;
-
-    #[ORM\Column]
-    private array $tags = [];
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -57,6 +56,14 @@ class Article
     #[ORM\Column]
     private ?bool $isValidated = false;
 
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'articles')]
+    private Collection $categories;
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,18 +77,6 @@ class Article
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getTags(): array
-    {
-        return $this->tags;
-    }
-
-    public function setTags(array $tags): self
-    {
-        $this->tags = $tags;
 
         return $this;
     }
@@ -226,6 +221,33 @@ class Article
     public function setIsValidated(bool $isValidated): self
     {
         $this->isValidated = $isValidated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->removeElement($category)) {
+            $category->removeArticle($this);
+        }
 
         return $this;
     }

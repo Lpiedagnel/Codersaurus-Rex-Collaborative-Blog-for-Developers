@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 
@@ -17,8 +19,11 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $entityManager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager; 
         parent::__construct($registry, Article::class);
     }
 
@@ -40,70 +45,25 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-    public function createFindLatest(int $limit = null): QueryBuilder
+    public function createFindLatest(int $limit = null, String $categoryName = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
             ->andWhere('a.isValidated = true')
             ->orderBy('a.created_at', 'DESC');
+
+        if ($categoryName !== null) {
+            $category = $this->entityManager->getRepository(Category::class)->findOneBy(['name' => $categoryName]);
+
+            $query
+                ->andWhere(':category MEMBER OF a.categories')
+                ->setParameter('category', $category);
+        }
 
         if ($limit !== null) {
             $query->setMaxResults($limit);
         }
 
         return $query;
-    }
-
-    public function findByTag(string $tag, int $limit = null): array
-    {
-        $queryBuilder = $this->createQueryBuilder('a');
-        $queryBuilder
-            ->andWhere(
-                $queryBuilder->expr()->like(
-                    'a.tags',
-                    $queryBuilder->expr()->literal('%"' . $tag . '"%')
-                )
-            )
-            ->andWhere('a.isValidated = true');
-
-        if ($limit !== null) {
-            $queryBuilder->setMaxResults($limit);
-        }
-    
-        return $queryBuilder->getQuery()->getResult();
-
-        // Other try with SQL
-        /*
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = "
-            SELECT *
-            FROM article
-            WHERE JSON_CONTAINS(tags, :tag, '$')
-            ";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindValue('tag', $tag);
-        $result = $stmt->executeQuery();
-    
-        return $result->fetchAll();
-        */
-    }
-
-    public function getAllTags(): array
-    {
-        $query = $this->createQueryBuilder('a')
-            ->select('a.tags')
-            ->getQuery();
-    
-        $result = $query->getResult();
-
-        // Get the "key" tag
-        $tags = array_column($result, 'tags');
-    
-        // Merge all array and delete duplicate. The spread operator "..." unpack arrays.
-        $allTags = array_unique(array_merge(...$tags));
-
-        sort($allTags);
-    
-        return $allTags;
     }
 
     public function findWithSearch(string $search): array
@@ -113,6 +73,17 @@ class ArticleRepository extends ServiceEntityRepository
             ->setParameter('searchTerm', '%' . $search . '%');
 
         return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findArticlesWithCategory(Category $category, int $limit = 3): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.categories', 'c')
+            ->where('c = :category')
+            ->setParameter('category', $category)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }

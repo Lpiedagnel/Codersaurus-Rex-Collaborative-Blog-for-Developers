@@ -5,7 +5,7 @@
     <div class="d-flex flex-row align-items-start flex-wrap gap-4">
     {% for tag in tags %}
         <a  
-            href="{{ path('app_home', {tag: tag}) }}" 
+            href="{{ path('app_home', {category: tag}) }}" 
             class=" btn btn-primary d-block px-5 py-2 fw-bolder shadow border font-monospace {% if currentTag == tag %} active {% endif %}"
         >
         {{ tag }}
