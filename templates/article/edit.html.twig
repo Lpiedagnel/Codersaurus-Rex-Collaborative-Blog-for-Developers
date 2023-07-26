@@ -57,10 +57,23 @@
             {% endif %}
         </div>
 
-        {# Tags #}
         {# Categories #}
         <div class="mb-4 btn-group d-flex flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
-            {{ form_row(form.categories) }}
+            {% for choice in form.categories %}
+                {{ form_widget(choice, {
+                    attr: {
+                        class: 'btn-check',
+                        id: choice.vars.id,
+                        autocomplete: 'off'
+                    }
+                }) }}
+                {{ form_label(choice, choice.vars.label, {
+                    label_attr: {
+                        class: 'btn btn-outline-primary',
+                        for: choice.vars.id
+                    }
+                }) }}
+            {% endfor %}
         </div>
 
         {# Content #}
