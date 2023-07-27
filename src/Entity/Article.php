@@ -40,9 +40,6 @@ class Article
     #[ORM\Column(length: 255)]
     private ?string $meta_description = null;
 
-    #[ORM\Column]
-    private array $comments = [];
-
     #[ORM\Column(length: 100)]
     private ?string $extract = null;
 
@@ -59,9 +56,13 @@ class Article
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'articles')]
     private Collection $categories;
 
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,18 +166,6 @@ class Article
         return $this;
     }
 
-    public function getComments(): array
-    {
-        return $this->comments;
-    }
-
-    public function setComments(array $comments): self
-    {
-        $this->comments = $comments;
-
-        return $this;
-    }
-
     public function getExtract(): ?string
     {
         return $this->extract;
@@ -247,6 +236,36 @@ class Article
     {
         if ($this->categories->removeElement($category)) {
             $category->removeArticle($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getArticle() === $this) {
+                $comment->setArticle(null);
+            }
         }
 
         return $this;
