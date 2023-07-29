@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Event\ArticleViewEvent;
 use App\Form\ArticleType;
+use App\Form\CommentType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use App\Repository\UserRepository;
 use App\Service\ArticleViewCounter;
 use App\Service\UploadImageService;
@@ -82,8 +85,8 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository, ArticleViewCounter $articleViewCounter): Response
+    #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
+    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response
     {
         $authorId = $article->getAuthor();
 
@@ -113,6 +116,25 @@ class ArticleController extends AbstractController
             $similarArticles[] = $currentArticle;
         }
 
+        // Comment form
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment);
+
+        $commentForm->handleRequest($request);
+
+        // Check comment Form
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setAuthor($security->getUser());
+            $comment->setArticle($article);
+
+            $commentRepository->save($comment);
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'Votre commentaire a été publié !');
+
+            return $this->redirectToRoute('app_article_show', ['slug' => $article->getSlug()]);
+        }
+
         // Add view count
         $articleViewCounter->incrementViewsCount($article);
         
@@ -120,7 +142,8 @@ class ArticleController extends AbstractController
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'author' => $author,
-            'similarArticles' => $similarArticles
+            'similarArticles' => $similarArticles,
+            'commentForm' => $commentForm
         ]);
     }
 

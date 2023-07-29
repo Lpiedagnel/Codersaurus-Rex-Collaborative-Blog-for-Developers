@@ -3,13 +3,16 @@
             <img src="{{ app.user.avatarLink }}" class="img-thumbnail rounded-circle col-7 col-sm-4 col-md-3 col-lg-2 col-xl-1" alt="...">
             <div class="card shadow-sm w-100">
               <div class="card-body">
-                <form action="{{ path('app_comment_new')}}" method="post">
-                  <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label"><span class="fw-bold">{{ app.user.username }}</span>, postez votre commentaire !</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Article très intéressant !"></textarea>
-                  </div>
-                  <button class="btn btn-primary float-end" type="submit">Poster votre commentaire</button>
-                </form>
+                {# Comment Form #}
+                {{ form_start(commentForm) }}
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <span class="fw-bold">{{ app.user.username }}</span>, postez votre commentaire !
+                        </label>
+                        {{ form_widget(commentForm.content, {'attr': {'class': 'form-control', 'placeholder': 'Article très intéressant !', 'rows': 3}}) }}
+                    </div>
+                    <button class="btn btn-primary float-end" type="submit">Poster votre commentaire</button>
+                {{ form_end(commentForm) }}
               </div>
             </div>
           </div>
