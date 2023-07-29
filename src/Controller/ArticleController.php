@@ -126,6 +126,7 @@ class ArticleController extends AbstractController
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
             $comment->setAuthor($security->getUser());
             $comment->setArticle($article);
+            $comment->setCreatedAt(new \DateTimeImmutable());
 
             $commentRepository->save($comment);
             $entityManager->flush();
@@ -143,7 +144,8 @@ class ArticleController extends AbstractController
             'article' => $article,
             'author' => $author,
             'similarArticles' => $similarArticles,
-            'commentForm' => $commentForm
+            'commentForm' => $commentForm,
+            'comments' => $article->getComments()
         ]);
     }
 
