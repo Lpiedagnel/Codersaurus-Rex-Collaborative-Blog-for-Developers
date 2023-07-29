@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Factory\ArticleFactory;
 use App\Factory\CategoryFactory;
+use App\Factory\CommentFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -28,7 +29,7 @@ class AppFixtures extends Fixture
                 ['name' => 'Étude de cas']
             ]
         );
-        ArticleFactory::createMany(50, function() {
+        ArticleFactory::createMany(20, function() {
             return [
                 'author' => UserFactory::random(),
                 'categories' => [
@@ -36,6 +37,12 @@ class AppFixtures extends Fixture
                     CategoryFactory::random(),
                     CategoryFactory::random()
                 ]
+            ];
+        });
+        CommentFactory::createMany(100, function() {
+            return [
+                'author' => UserFactory::random(),
+                'article' => ArticleFactory::random()
             ];
         });
 

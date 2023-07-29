@@ -68,60 +68,15 @@
         <hr>
         <section class="post__comments mt-5">
           <h2>Commentaires</h2>
-          <!-- Comment Form -->
-          <div class="post__comment-form d-flex flex-column flex-lg-row align-items-center gap-4">
-            <img src="https://picsum.photos/150" class="img-thumbnail rounded-circle" alt="...">
-            <div class="card shadow-sm w-100">
-              <div class="card-body">
-                <form action="#" method="post">
-                  <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Votre adresse mail</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Votre prénom</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Votre commentaire</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <ul>
-            <!-- Comment -->
-            <li class="post__comment card shadow mt-3">
-              <div class="card-body row">
-                <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4">
-                  <img src="https://picsum.photos/140" class="img-thumbnail rounded-circle col-12 col-md-3 mx-auto" alt="...">
-                  <div class="col-12 col-md-9">
-                    <div class="d-flex flex-row align-items-center justify-content-between text-muted">
-                      <h4>John Doe</h4>
-                      <p>Il y a 1 jour</p>
-                    </div>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum quo dolorem accusamus, corporis, ut inventore omnis commodi fuga magni blanditiis nesciunt aut sapiente maiores voluptatum sed quae! Corrupti, voluptatibus pariatur.</p>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae architecto veritatis tenetur. Aut similique deleniti quo, nemo sequi ipsam vel dolorum tempore harum blanditiis fugit et odit praesentium. Quis, fugiat.</p>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <!-- Comment -->
-            <li class="post__comment card shadow mt-3">
-              <div class="card-body row">
-                <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4">
-                  <img src="https://picsum.photos/140" class="rounded-circle col-12 col-md-3 m-auto" alt="...">
-                  <div class="col-12 col-md-9">
-                    <div class="text-muted">
-                      <h4>John Doe</h4>
-                      <p>Il y a 1 jour</p>
-                    </div>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum quo dolorem accusamus, corporis, ut inventore omnis commodi fuga magni blanditiis nesciunt aut sapiente maiores voluptatum sed quae! Corrupti, voluptatibus pariatur.</p>
-                  </div>
-                </div>
-              </div>
-            </li>
+          {% if is_granted('ROLE_USER') %}
+            {% include "comment/_new.html.twig" %}
+          {% else %}
+              <p class="py-3 fs-5"><a href="{{ path('app_login') }}">Connectez-vous</a> et donnez votre avis sur cette publication !</p>
+          {% endif %}
+          <ul class="p-0">
+            {% for comment in comments %}
+              {% include "comment/_card.html.twig" %}
+            {% endfor %}
           </ul>
         </section>
       </div>

@@ -89,7 +89,6 @@ final class ArticleFactory extends ModelFactory
     {
         return [
             'author' => UserFactory::class,
-            'comments' => [],
             'extract' => self::faker()->text(100),
             'content' => self::faker()->text(2000),
             'created_at' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
