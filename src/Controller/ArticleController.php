@@ -86,38 +86,15 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
-    public function show(UserRepository $userRepository, ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response
+    public function show(ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response
     {
         $slug = $request->get('slug');
         $article = $articleRepository->findArticleWithAuthorAndCategoriesAndComments($slug);
 
-        $authorId = $article->getAuthor();
-
-        $user = $userRepository->find($authorId);
-
-        $author = [
-            'id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'avatar_link' => $user->getAvatarLink(),
-            'job' => $user->getJob(),
-        ];
-
         // Select randomly one category from the article and get similar articles.
         $categories = $article->getCategories()->toArray();
         $randomCategory = $categories[array_rand($categories)];
-        $similarArticlesData = $articleRepository->findArticlesWithCategory($randomCategory);
-        
-        // Get only the useful info
-        $similarArticles = [];
-
-        foreach ($similarArticlesData as $currentArticle) {
-            $currentArticle = [
-                'slug' => $currentArticle->getSlug(),
-                'title' => $currentArticle->getTitle()
-            ];
-
-            $similarArticles[] = $currentArticle;
-        }
+        $similarArticles = $articleRepository->findArticlesWithCategory($randomCategory);
 
         // Comment form
         $comment = new Comment();
@@ -145,10 +122,10 @@ class ArticleController extends AbstractController
         // Render
         return $this->render('article/show.html.twig', [
             'article' => $article,
-            'author' => $author,
+            'author' => $article->getAuthor(),
             'similarArticles' => $similarArticles,
             'commentForm' => $commentForm,
-            'comments' => $article->getComments()
+            'comments' => $article->getComments(),
         ]);
     }
 
@@ -203,6 +180,8 @@ class ArticleController extends AbstractController
     public function dashboard(ArticleRepository $articleRepository): Response 
     {
         $articles = $articleRepository->findBy([], ['isValidated' => 'ASC']);
+
+        dd($articles);
 
         return $this->render('article/dashboard.html.twig', [
             'articles' => $articles
