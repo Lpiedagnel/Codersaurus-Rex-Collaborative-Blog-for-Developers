@@ -87,6 +87,19 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findArticleWithAuthorAndCategoriesAndComments($slug)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a', 'u', 'c', 'cm')
+            ->leftJoin('a.author', 'u')
+            ->leftJoin('a.categories', 'c')
+            ->leftJoin('a.comments', 'cm')
+            ->where('a.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
     
 
 

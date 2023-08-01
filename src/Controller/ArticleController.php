@@ -86,8 +86,11 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
-    public function show(Article $article, UserRepository $userRepository, ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response
+    public function show(UserRepository $userRepository, ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response
     {
+        $slug = $request->get('slug');
+        $article = $articleRepository->findArticleWithAuthorAndCategoriesAndComments($slug);
+
         $authorId = $article->getAuthor();
 
         $user = $userRepository->find($authorId);
