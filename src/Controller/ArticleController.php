@@ -24,6 +24,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Form\FormInterface as FormFormInterface;
+use Symfony\Component\Form\Test\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcherEventDispatcherInterface;
 
 #[Route('/article')]
@@ -32,7 +35,7 @@ class ArticleController extends AbstractController
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage, KernelInterface $kernel): Response
+    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage): Response
     {
         $article = new Article();
 
@@ -86,39 +89,26 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
-    public function show(ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response
+    public function show(ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response 
     {
+        // Get article
         $slug = $request->get('slug');
         $article = $articleRepository->findArticleWithAuthorAndCategoriesAndComments($slug);
-
-        // Select randomly one category from the article and get similar articles.
-        $categories = $article->getCategories()->toArray();
-        $randomCategory = $categories[array_rand($categories)];
-        $similarArticles = $articleRepository->findArticlesWithCategory($randomCategory);
-
-        // Comment form
-        $comment = new Comment();
-        $commentForm = $this->createForm(CommentType::class, $comment);
-
-        $commentForm->handleRequest($request);
-
-        // Check comment Form
-        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $comment->setAuthor($security->getUser());
-            $comment->setArticle($article);
-            $comment->setCreatedAt(new \DateTimeImmutable());
-
-            $commentRepository->save($comment);
-            $entityManager->flush();
-            
-            $this->addFlash('success', 'Votre commentaire a été publié !');
-
-            return $this->redirectToRoute('app_article_show', ['slug' => $article->getSlug()]);
+    
+        // Get similar articles
+        $similarArticles = $this->findSimilarArticles($articleRepository, $article);
+    
+        // Create Comment Form
+        $commentForm = $this->createAndHandleCommentForm($request, $security, $article, $commentRepository, $entityManager);
+    
+        // Check if the form was successfully submitted and redirected. Otherwise the redirect doesn't work.
+        if ($commentForm instanceof RedirectResponse) {
+            return $commentForm;
         }
-
+    
         // Add view count
         $articleViewCounter->incrementViewsCount($article);
-        
+    
         // Render
         return $this->render('article/show.html.twig', [
             'article' => $article,
@@ -127,6 +117,38 @@ class ArticleController extends AbstractController
             'commentForm' => $commentForm,
             'comments' => $article->getComments(),
         ]);
+    }
+    
+    private function createAndHandleCommentForm(Request $request, Security $security, Article $article, CommentRepository $commentRepository, EntityManagerInterface $entityManager): FormFormInterface | RedirectResponse 
+    {
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment);
+        $commentForm->handleRequest($request);
+    
+        // If the form is submitted
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setAuthor($security->getUser());
+            $comment->setArticle($article);
+            $comment->setCreatedAt(new \DateTimeImmutable());
+    
+            $commentRepository->save($comment);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Votre commentaire a été publié !');
+    
+            // Redirect to current Page
+            return $this->redirectToRoute('app_article_show', ['slug' => $article->getSlug()]);
+        }
+    
+        return $commentForm;
+    }
+    
+    private function findSimilarArticles(ArticleRepository $articleRepository, Article $article): array
+    {
+        $categories = $article->getCategories()->toArray();
+        $randomCategory = $categories[array_rand($categories)];
+
+        return $articleRepository->findArticlesWithCategory($randomCategory);
     }
 
     #[Route('/{slug}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
