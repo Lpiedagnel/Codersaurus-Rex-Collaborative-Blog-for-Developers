@@ -7,7 +7,7 @@
         <!-- Header -->
         <header class="post__header d-flex flex-column text-center">
             <h1>{{ article.title }}</h1>
-            <img src="{{ author.avatar_link }}" class="img-thumbnail rounded-circle mx-auto" alt="Auteur de l'article">
+            <img src="{{ author.avatarLink }}" class="img-thumbnail rounded-circle mx-auto" alt="Auteur de l'article">
             <a class="text-decoration-none" href="{{ path('app_user_show', { id: author.id }) }}">
               <h2 class="fw-bold">{{ author.username }}</h2>
             </a>

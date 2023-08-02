@@ -17,7 +17,7 @@ class Comment
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Article $article = null;
 
-    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\ManyToOne(inversedBy: 'comments', fetch: 'EAGER')]
     private ?User $author = null;
 
     #[ORM\Column(type: Types::TEXT)]

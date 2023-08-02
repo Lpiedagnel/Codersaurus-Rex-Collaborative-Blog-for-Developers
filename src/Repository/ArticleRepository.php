@@ -48,6 +48,9 @@ class ArticleRepository extends ServiceEntityRepository
     public function createFindLatest(int $limit = null, String $categoryName = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
+            ->select('a', 'u', 'c')
+            ->leftJoin('a.author', 'u')
+            ->leftJoin('a.categories', 'c')
             ->andWhere('a.isValidated = true')
             ->orderBy('a.created_at', 'DESC');
 
@@ -80,12 +83,26 @@ class ArticleRepository extends ServiceEntityRepository
     public function findArticlesWithCategory(Category $category, int $limit = 3): array
     {
         return $this->createQueryBuilder('a')
+            ->select('a.slug', 'a.title')
             ->join('a.categories', 'c')
             ->where('c = :category')
             ->setParameter('category', $category)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findArticleWithAuthorAndCategoriesAndComments($slug)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a', 'PARTIAL u.{id, username, avatar_link, job}', 'c', 'cm')
+            ->leftJoin('a.author', 'u')
+            ->leftJoin('a.categories', 'c')
+            ->leftJoin('a.comments', 'cm')
+            ->where('a.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
     
 
