@@ -48,6 +48,9 @@ class ArticleRepository extends ServiceEntityRepository
     public function createFindLatest(int $limit = null, String $categoryName = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
+            ->select('a', 'u', 'c')
+            ->leftJoin('a.author', 'u')
+            ->leftJoin('a.categories', 'c')
             ->andWhere('a.isValidated = true')
             ->orderBy('a.created_at', 'DESC');
 
