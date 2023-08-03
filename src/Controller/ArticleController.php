@@ -202,7 +202,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_article_validation', methods: ['POST'], priority: 3)]
+    #[Route('/{slug}/validation', name: 'app_article_validation', methods: ['POST'], priority: 3)]
     #[IsGranted('ROLE_EDITOR')]
     public function validation(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
