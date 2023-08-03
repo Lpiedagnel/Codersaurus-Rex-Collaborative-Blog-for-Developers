@@ -11,6 +11,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use App\Repository\UserRepository;
 use App\Service\ArticleViewCounter;
+use App\Service\UniqueSlugService;
 use App\Service\UploadImageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -35,7 +36,7 @@ class ArticleController extends AbstractController
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage): Response
+    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UniqueSlugService $uniqueSlugService, UploadImageService $uploadImage): Response
     {
         $article = new Article();
 
@@ -44,15 +45,8 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Create unique slug
-            $slugify = new Slugify;
-            $slug = $slugify->slugify($article->getTitle());
             
-            // Verify if slug is unique
-            $existingArticle = $articleRepository->findOneBy(['slug' => $slug]);
-            $slug .= $existingArticle ? '-' . uniqid() : '';
-            
+            $slug = $uniqueSlugService->createUniqueSlug($article->getTitle());
             $article->setSlug($slug);
 
             // Set categories
@@ -203,14 +197,12 @@ class ArticleController extends AbstractController
     {
         $articles = $articleRepository->findBy([], ['isValidated' => 'ASC']);
 
-        dd($articles);
-
         return $this->render('article/dashboard.html.twig', [
             'articles' => $articles
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_article_validation', methods: ['POST'])]
+    #[Route('/{slug}', name: 'app_article_validation', methods: ['POST'], priority: 3)]
     #[IsGranted('ROLE_EDITOR')]
     public function validation(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
