@@ -48,6 +48,7 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             
+            // Create slug
             $slug = $uniqueSlugService->createUniqueSlug($article->getTitle());
             $article->setSlug($slug);
 
@@ -221,9 +222,8 @@ class ArticleController extends AbstractController
     #[Route('/search', name: 'app_article_search', methods: ['GET'], priority: 2)]
     public function search(Request $request, ArticleRepository $articleRepository): Response 
     {
-        $articlesData = [];
-
         $searchTerms = $request->query->get('search');
+        $articlesData = [];
 
         if ($searchTerms !== null && $searchTerms !== '') {
             $articlesData = $articleRepository->findWithSearch($searchTerms);
