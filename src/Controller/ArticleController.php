@@ -11,6 +11,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use App\Repository\UserRepository;
 use App\Service\ArticleViewCounter;
+use App\Service\ArticleViewCounterService;
 use App\Service\UniqueSlugService;
 use App\Service\UploadImageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface as FormFormInterface;
 use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -56,18 +58,8 @@ class ArticleController extends AbstractController
             }
             
             // Check Upload
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['thumbnailUrl']->getData();
-            
-            if ($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
-                $fileName = $slug . '.webp';
-                
-                $uploadImage->upload($uploadedFile, $destination, $fileName);
-                
-                $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
-            }
-            
+            $this->handleUpload($form, $uploadImage, $article);
+
             $article->setAuthor($security->getUser());
             $article->setCreatedAt(new \DateTimeImmutable());
             $articleRepository->save($article, true);
@@ -82,8 +74,23 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    private function handleUpload(Form $form, UploadImageService $uploadImage, Article $article): void
+    {
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $form['thumbnailUrl']->getData();
+
+        if ($uploadedFile) {
+            $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
+            $fileName = $article->getSlug() . '.webp';
+            
+            $uploadImage->upload($uploadedFile, $destination, $fileName);
+            
+            $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
+        }
+    }
+
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
-    public function show(ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response 
+    public function show(ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounterService $articleViewCounter): Response 
     {
         // Get article
         $slug = $request->get('slug');
@@ -155,17 +162,7 @@ class ArticleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Check Upload
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['thumbnailUrl']->getData();
-            
-            if ($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
-                $fileName = $article->getSlug() . '.webp';
-                
-                $uploadImage->upload($uploadedFile, $destination, $fileName);
-                
-                $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
-            }
+            $this->handleUpload($form, $uploadImage, $article);
 
             $articleRepository->save($article, true);
 

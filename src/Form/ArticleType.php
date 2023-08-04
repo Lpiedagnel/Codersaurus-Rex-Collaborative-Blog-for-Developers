@@ -27,6 +27,7 @@ class ArticleType extends AbstractType
                 'placeholder' => 'Entre 10 et 100 caractères'
             ],
             'required' => true,
+            /*
             'constraints' => [
                 new Length([
                     'min' => 10,
@@ -35,12 +36,14 @@ class ArticleType extends AbstractType
                     'maxMessage' => 'Le titre doit faire entre 10 et 100 caractères.',
                 ])
             ]
+            */
         ])
         ->add('extract', TextType::class, [
             'attr' => [
                 'placeholder' => 'Entre 30 et 100 caractères'
             ],
             'required' => true,
+            /*
             'constraints' => [
                 new Length([
                     'min' => 30,
@@ -49,6 +52,7 @@ class ArticleType extends AbstractType
                     'maxMessage' => 'Le résumé de l\'article doit faire entre 30 et 100 caractères.',
                 ])
             ]
+            */
         ])
         ->add('categories', EntityType::class, [
             'class' => Category::class,
@@ -85,6 +89,7 @@ class ArticleType extends AbstractType
             'attr' => [
                 'placeholder' => 'Entre 40 et 60 caractères'
             ],
+            /*
             'constraints' => [
                 new Length([
                     'min' => 40,
@@ -93,11 +98,13 @@ class ArticleType extends AbstractType
                     'maxMessage' => 'La Meta Title doit faire entre 40 et 60 caractères.',
                 ])
             ]
+            */
         ])
         ->add('meta_description', TextareaType::class, [
             'attr' => [
                 'placeholder' => 'Entre 140 et 160 caractères'
             ],
+            /*
             'constraints' => [
                 new Length([
                     'min' => 140,
@@ -106,6 +113,7 @@ class ArticleType extends AbstractType
                     'maxMessage' => 'La Meta Description doit faire entre 140 et 160 caractères.',
                 ])
             ]
+            */
         ]);
     }
 
