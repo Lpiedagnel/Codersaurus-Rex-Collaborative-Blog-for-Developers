@@ -25,6 +25,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Validator\Constraints\File;
 use App\Service\UserAuthorizationService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\PasswordHasher\Exception\InvalidPasswordException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -41,22 +42,9 @@ class UserController extends AbstractController
 
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository, Security $security): Response
+    public function index(UserRepository $userRepository): Response
     {
-        $usersData = $userRepository->findAll();
-
-        $users = [];
-
-        foreach ($usersData as $currentUser) {
-            $user = [
-                'id' => $currentUser->getId(),
-                'avatar_link' => $currentUser->getAvatarLink(),
-                'username' => $currentUser->getUsername(),
-                'job' => $currentUser->getJob(),
-                'role' => $currentUser->getRoles()
-            ];
-            $users[] = $user;
-        }
+        $users = $userRepository->findAll();
 
         return $this->render('user/index.html.twig', [
             'users' => $users,
@@ -85,19 +73,8 @@ class UserController extends AbstractController
     */
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $userData): Response
+    public function show(User $user): Response
     {
-        $user = [
-            'username' => $userData->getUsername(),
-            'job' => $userData->getJob(),
-            'bio' => $userData->getBio(),
-            'createdAt' => $userData->getCreatedAt(),
-            'birthday' => $userData->getBirthday(),
-            'avatar_link' => $userData->getAvatarLink(),
-            'role' => $userData->getRoles(),
-            'articles' => $userData->getArticles()
-        ];
-
         return $this->render('user/show.html.twig', [
             'controller_name' => 'UserController',
             'user' => $user
@@ -105,7 +82,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST']), IsGranted('ROLE_USER')]
-    public function edit(Request $request, User $user, UserRepository $userRepository, Security $security, UploadImageService $uploadImage): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UploadImageService $uploadImageService): Response
     {
         // Check auth
         $this->userAuthorization->checkUserAuthorization($user);
@@ -117,17 +94,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Check Upload
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['avatarFile']->getData();
-
-            if ($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/avatars';
-                $fileName = $user->getId() . '.webp';
-
-                $uploadImage->upload($uploadedFile, $destination, $fileName);
-
-                $user->setAvatarLink('/uploads/avatars/' . $fileName);
-            }
+            $this->handleAvatarUpload($form, $uploadImageService, $user);
 
             $userRepository->save($user, true);
 
@@ -140,6 +107,21 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+    }
+
+    private function handleAvatarUpload(Form $form, UploadImageService $uploadImage, User $user): void
+    {
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $form['avatarFile']->getData();
+
+        if ($uploadedFile) {
+            $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/avatars';
+            $fileName = $user->getId() . '.webp';
+
+            $uploadImage->upload($uploadedFile, $destination, $fileName);
+
+            $user->setAvatarLink('/uploads/avatars/' . $fileName);
+        }
     }
 
     #[Route('/{id}/edit/password', name: 'app_user_password_edit', methods: ['GET', 'POST'])]

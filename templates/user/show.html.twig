@@ -9,16 +9,16 @@
         <div class="card border border-5 my-5">
             <div class="row">
                 <div class="col-12 col-lg-4 d-flex justify-content-center">
-                    <img src="{{ user.avatar_link }}" alt="Avatar de {{ user.username }}" class="rounded col-6 m-3">
+                    <img src="{{ user.avatarLink }}" alt="Avatar de {{ user.username }}" class="rounded col-6 m-3">
                 </div>
                 <div class="col-12 col-lg-8 d-flex flex-column justify-content-center align-items-center">
                     <h1 class="my-3 fw-bold">{{ user.username }}</h1>
 
                     <h2 class="fs-6 text-secondary">
                         Rôle : 
-                        {% if 'ROLE_ADMIN' in user.role %}
+                        {% if 'ROLE_ADMIN' in user.roles %}
                             Administration
-                        {% elseif 'ROLE_EDITOR' in user.role %}
+                        {% elseif 'ROLE_EDITOR' in user.roles %}
                             Rédaction
                         {% else %}
                             Membre
