@@ -110,39 +110,7 @@ class UserController extends AbstractController
         // Check auth
         $this->userAuthorization->checkUserAuthorization($user);
 
-        $form = $this->createFormBuilder($user)
-            ->add('email', EmailType::class)
-            ->add('username', TextType::class)
-            ->add('job', TextType::class, ['required' => false])
-            ->add('bio', TextareaType::class, ['required' => false])
-            ->add('birthday', BirthdayType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd',
-                'required' => false,
-                'years' => range(date('Y') - 10, date('Y') - 100)
-                ])
-            ->add('avatarFile', FileType::class, [
-                'required' => false,
-                'mapped' => false,
-                'attr' => [
-                    'enctype' => 'multipart/form-data'
-                ],
-                'constraints' => [
-                    new File([
-                        'maxSize' => '1024k',
-                        'maxSizeMessage' => 'Le fichier est trop volumineux. La taille maximale autorisée est 1024 Ko.',
-                        'mimeTypes' => [
-                            'image/jpg',
-                            'image/jpeg',
-                            'image/png',
-                            'image/webp',
-                        ],
-                        'mimeTypesMessage' => 'Vous devez uploader une image (format .jpg, .jpeg, .png ou .webp)'
-                    ])
-                ]
-            ])
-            ->getForm()
-            ;
+        $form = $this->createForm(UserType::class, $user, ['required' => true]);
 
         $form->handleRequest($request);
 
