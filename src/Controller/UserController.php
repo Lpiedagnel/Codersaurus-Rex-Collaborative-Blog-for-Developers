@@ -93,8 +93,11 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Check Upload
-            $this->handleAvatarUpload($form, $uploadImageService, $user);
+            // Manage upload
+            $uploadedFile = $form['avatarFile']->getData();
+            if ($uploadedFile) {
+                $uploadImageService->handleUpload($form, $user);
+            }
 
             $userRepository->save($user, true);
 
@@ -107,21 +110,6 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
-    }
-
-    private function handleAvatarUpload(Form $form, UploadImageService $uploadImage, User $user): void
-    {
-        /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $form['avatarFile']->getData();
-
-        if ($uploadedFile) {
-            $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/avatars';
-            $fileName = $user->getId() . '.webp';
-
-            $uploadImage->upload($uploadedFile, $destination, $fileName);
-
-            $user->setAvatarLink('/uploads/avatars/' . $fileName);
-        }
     }
 
     #[Route('/{id}/edit/password', name: 'app_user_password_edit', methods: ['GET', 'POST'])]

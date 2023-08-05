@@ -38,7 +38,7 @@ class ArticleController extends AbstractController
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UniqueSlugService $uniqueSlugService, UploadImageService $uploadImage): Response
+    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UniqueSlugService $uniqueSlugService, UploadImageService $uploadImageService): Response
     {
         $article = new Article();
 
@@ -58,8 +58,11 @@ class ArticleController extends AbstractController
                 $article->addCategory($category);
             }
             
-            // Check Upload
-            $this->handleUpload($form, $uploadImage, $article);
+            // Manage upload
+            $uploadedFile = $form['thumbnailUrl']->getData();
+            if ($uploadedFile) {
+                $uploadImageService->handleUpload($form, $article);
+            }
 
             $article->setAuthor($security->getUser());
             $article->setCreatedAt(new \DateTimeImmutable());
@@ -73,21 +76,6 @@ class ArticleController extends AbstractController
             'article' => $article,
             'form' => $form,
         ]);
-    }
-
-    private function handleUpload(Form $form, UploadImageService $uploadImage, Article $article): void
-    {
-        /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $form['thumbnailUrl']->getData();
-
-        if ($uploadedFile) {
-            $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
-            $fileName = $article->getSlug() . '.webp';
-            
-            $uploadImage->upload($uploadedFile, $destination, $fileName);
-            
-            $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
-        }
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
@@ -155,15 +143,18 @@ class ArticleController extends AbstractController
 
     #[Route('/{slug}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_EDITOR')]
-    public function edit(Request $request, Article $article, ArticleRepository $articleRepository, UploadImageService $uploadImage): Response
+    public function edit(Request $request, Article $article, ArticleRepository $articleRepository, UploadImageService $uploadImageService): Response
     {
         $form = $this->createForm(ArticleType::class, $article, ['required' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Check Upload
-            $this->handleUpload($form, $uploadImage, $article);
+            // Manage upload
+            $uploadedFile = $form['thumbnailUrl']->getData();
+            if ($uploadedFile) {
+                $uploadImageService->handleUpload($form, $article);
+            }
 
             $articleRepository->save($article, true);
 
