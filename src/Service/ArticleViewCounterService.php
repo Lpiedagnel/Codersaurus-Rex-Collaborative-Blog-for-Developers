@@ -6,7 +6,7 @@ use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ArticleViewCounter
+class ArticleViewCounterService
 {
     private $requestStack;
     private $ArticleRepository;

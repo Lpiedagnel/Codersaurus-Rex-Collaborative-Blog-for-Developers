@@ -11,6 +11,8 @@ use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use App\Repository\UserRepository;
 use App\Service\ArticleViewCounter;
+use App\Service\ArticleViewCounterService;
+use App\Service\UniqueSlugService;
 use App\Service\UploadImageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -24,6 +26,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface as FormFormInterface;
+use Symfony\Component\Form\Test\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcherEventDispatcherInterface;
 
 #[Route('/article')]
@@ -32,7 +38,7 @@ class ArticleController extends AbstractController
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UploadImageService $uploadImage, KernelInterface $kernel): Response
+    public function new(Request $request, ArticleRepository $articleRepository, Security $security, UniqueSlugService $uniqueSlugService, UploadImageService $uploadImageService): Response
     {
         $article = new Article();
 
@@ -41,15 +47,9 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Create unique slug
-            $slugify = new Slugify;
-            $slug = $slugify->slugify($article->getTitle());
             
-            // Verify if slug is unique
-            $existingArticle = $articleRepository->findOneBy(['slug' => $slug]);
-            $slug .= $existingArticle ? '-' . uniqid() : '';
-            
+            // Create slug
+            $slug = $uniqueSlugService->createUniqueSlug($article->getTitle());
             $article->setSlug($slug);
 
             // Set categories
@@ -58,19 +58,12 @@ class ArticleController extends AbstractController
                 $article->addCategory($category);
             }
             
-            // Check Upload
-            /** @var UploadedFile $uploadedFile */
+            // Manage upload
             $uploadedFile = $form['thumbnailUrl']->getData();
-            
             if ($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
-                $fileName = $slug . '.webp';
-                
-                $uploadImage->upload($uploadedFile, $destination, $fileName);
-                
-                $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
+                $uploadImageService->handleUpload($form, $article);
             }
-            
+
             $article->setAuthor($security->getUser());
             $article->setCreatedAt(new \DateTimeImmutable());
             $articleRepository->save($article, true);
@@ -86,39 +79,26 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
-    public function show(ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounter $articleViewCounter): Response
+    public function show(ArticleRepository $articleRepository, Request $request, Security $security, CommentRepository $commentRepository, EntityManagerInterface $entityManager, ArticleViewCounterService $articleViewCounter): Response 
     {
+        // Get article
         $slug = $request->get('slug');
         $article = $articleRepository->findArticleWithAuthorAndCategoriesAndComments($slug);
-
-        // Select randomly one category from the article and get similar articles.
-        $categories = $article->getCategories()->toArray();
-        $randomCategory = $categories[array_rand($categories)];
-        $similarArticles = $articleRepository->findArticlesWithCategory($randomCategory);
-
-        // Comment form
-        $comment = new Comment();
-        $commentForm = $this->createForm(CommentType::class, $comment);
-
-        $commentForm->handleRequest($request);
-
-        // Check comment Form
-        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $comment->setAuthor($security->getUser());
-            $comment->setArticle($article);
-            $comment->setCreatedAt(new \DateTimeImmutable());
-
-            $commentRepository->save($comment);
-            $entityManager->flush();
-            
-            $this->addFlash('success', 'Votre commentaire a été publié !');
-
-            return $this->redirectToRoute('app_article_show', ['slug' => $article->getSlug()]);
+    
+        // Get similar articles
+        $similarArticles = $this->findSimilarArticles($articleRepository, $article);
+    
+        // Create Comment Form
+        $commentForm = $this->createAndHandleCommentForm($request, $security, $article, $commentRepository, $entityManager);
+    
+        // Check if the form was successfully submitted and redirected. Otherwise the redirect doesn't work.
+        if ($commentForm instanceof RedirectResponse) {
+            return $commentForm;
         }
-
+    
         // Add view count
         $articleViewCounter->incrementViewsCount($article);
-        
+    
         // Render
         return $this->render('article/show.html.twig', [
             'article' => $article,
@@ -128,27 +108,52 @@ class ArticleController extends AbstractController
             'comments' => $article->getComments(),
         ]);
     }
+    
+    private function createAndHandleCommentForm(Request $request, Security $security, Article $article, CommentRepository $commentRepository, EntityManagerInterface $entityManager): FormFormInterface | RedirectResponse 
+    {
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment);
+        $commentForm->handleRequest($request);
+    
+        // If the form is submitted
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setAuthor($security->getUser());
+            $comment->setArticle($article);
+            $comment->setCreatedAt(new \DateTimeImmutable());
+    
+            $commentRepository->save($comment);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Votre commentaire a été publié !');
+    
+            // Redirect to current Page
+            return $this->redirectToRoute('app_article_show', ['slug' => $article->getSlug()]);
+        }
+    
+        return $commentForm;
+    }
+    
+    private function findSimilarArticles(ArticleRepository $articleRepository, Article $article): array
+    {
+        $categories = $article->getCategories()->toArray();
+        $randomCategory = $categories[array_rand($categories)];
+
+        return $articleRepository->findArticlesWithCategory($randomCategory);
+    }
 
     #[Route('/{slug}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_EDITOR')]
-    public function edit(Request $request, Article $article, ArticleRepository $articleRepository, UploadImageService $uploadImage): Response
+    public function edit(Request $request, Article $article, ArticleRepository $articleRepository, UploadImageService $uploadImageService): Response
     {
         $form = $this->createForm(ArticleType::class, $article, ['required' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Check Upload
-            /** @var UploadedFile $uploadedFile */
+            // Manage upload
             $uploadedFile = $form['thumbnailUrl']->getData();
-            
             if ($uploadedFile) {
-                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/thumbnails/';
-                $fileName = $article->getSlug() . '.webp';
-                
-                $uploadImage->upload($uploadedFile, $destination, $fileName);
-                
-                $article->setThumbnailUrl('/uploads/thumbnails/' . $fileName);
+                $uploadImageService->handleUpload($form, $article);
             }
 
             $articleRepository->save($article, true);
@@ -181,14 +186,12 @@ class ArticleController extends AbstractController
     {
         $articles = $articleRepository->findBy([], ['isValidated' => 'ASC']);
 
-        dd($articles);
-
         return $this->render('article/dashboard.html.twig', [
             'articles' => $articles
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_article_validation', methods: ['POST'])]
+    #[Route('/{slug}/validation', name: 'app_article_validation', methods: ['POST'], priority: 3)]
     #[IsGranted('ROLE_EDITOR')]
     public function validation(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
@@ -210,9 +213,8 @@ class ArticleController extends AbstractController
     #[Route('/search', name: 'app_article_search', methods: ['GET'], priority: 2)]
     public function search(Request $request, ArticleRepository $articleRepository): Response 
     {
-        $articlesData = [];
-
         $searchTerms = $request->query->get('search');
+        $articlesData = [];
 
         if ($searchTerms !== null && $searchTerms !== '') {
             $articlesData = $articleRepository->findWithSearch($searchTerms);
