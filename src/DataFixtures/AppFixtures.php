@@ -15,6 +15,7 @@ class AppFixtures extends Fixture
     {
         UserFactory::createOne(['email' => 'admin@gmail.com', 'username' => 'Admin', 'password' => 'test', 'roles' => ['ROLE_ADMIN']]);
         UserFactory::createOne(['email' => 'editor@gmail.com', 'username' => 'Editor', 'password' => 'test', 'roles' => ['ROLE_EDITOR']]);
+        UserFactory::createOne(['email' => 'test@gmail.com', 'username' => 'Compte de test', 'password' => 'test', 'roles' => ['ROLE_USER']]);
         UserFactory::createMany(10);
         CategoryFactory::createSequence(
             [
