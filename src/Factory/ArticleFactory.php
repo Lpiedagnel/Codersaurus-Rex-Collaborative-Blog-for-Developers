@@ -87,11 +87,13 @@ final class ArticleFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        $createdAt = $this->faker()->dateTimeBetween('-2 years', '-1 days');
+
         return [
             'author' => UserFactory::class,
             'extract' => self::faker()->text(100),
             'content' => self::faker()->text(2000),
-            'created_at' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'created_at' => \DateTimeImmutable::createFromMutable($createdAt),
             'meta_description' => self::faker()->text(255),
             'meta_title' => self::faker()->text(100),
             'thumbnail_url' => self::faker()->randomElement(self::THUMBNAILS),

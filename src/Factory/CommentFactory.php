@@ -46,9 +46,11 @@ final class CommentFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        $createdAt = $this->faker()->dateTimeBetween('-2 years', '-1 days');
+
         return [
             'content' => self::faker()->text(250),
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'createdAt' => \DateTimeImmutable::createFromMutable($createdAt)
         ];
     }
 
