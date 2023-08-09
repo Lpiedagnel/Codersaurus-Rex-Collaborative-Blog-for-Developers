@@ -7,7 +7,7 @@ Codersaurus Rex is a website that allows programmers to submit articles about th
 
 This project primarily utilizes Symfony 6 along with Bootstrap 5 and SASS to add a touch of style.
 
-![Homepage of Codersaurus](https://imgur.com/tcYilrX)
+![Homepage of Codersaurus](https://imgur.com/tcYilrX.png)
 
 
 ## Features of Codersaurus Rex
@@ -33,7 +33,7 @@ This project primarily utilizes Symfony 6 along with Bootstrap 5 and SASS to add
 - Create, edit, and delete categories in the EasyAdmin back-office
 - Moderate users and comments
 
-[Show article on Codersaurus Rex](https://imgur.com/UF8Blp1)
+![Show article on Codersaurus Rex](https://imgur.com/UF8Blp1.png)
 
 
 ## Installation of Codersaurus Rex
@@ -58,7 +58,7 @@ This command will start a local server for Symfony. If the database exists and t
 
 If you intend to deploy the project to production, remember to change the `APP_SECRET`variable in the `.env` file. It secures various functionalities of the application (sessions, cookies, encryption, etc.).
 
-[Add article on Codersaurus Rex](https://imgur.com/geujlAz)
+![Add article on Codersaurus Rex](https://imgur.com/geujlAz.png)
 
 
 ## Accounts with Special Permissions
@@ -92,4 +92,4 @@ In conclusion, Codersaurus Rex has been a fantastic opportunity for me to develo
 
 Thank you for your interest in this project, and I wish you happy coding!
 
-[Edit user on Codersaurus Rex](https://imgur.com/dqhPRN2)
+![Edit user on Codersaurus Rex](https://imgur.com/dqhPRN2.png)
