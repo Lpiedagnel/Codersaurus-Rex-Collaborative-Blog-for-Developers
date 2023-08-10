@@ -77,7 +77,7 @@ final class UserFactory extends ModelFactory
         
         return [
             'email' => $email,
-            'password' => 'test',
+            'password' => $this->faker()->password(),
             'username' => $username,
         ];
     }
