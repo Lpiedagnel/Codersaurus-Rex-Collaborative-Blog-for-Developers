@@ -135,6 +135,7 @@ class UserController extends AbstractController
 
         // If submit
         if ($form->isSubmitted() && $form->isValid()) {
+            /*
             
             // Check password
             $currentPassword = $form->get('currentPassword')->getData();
@@ -155,6 +156,10 @@ class UserController extends AbstractController
 
             $this->addFlash('success', 'Votre mot de passe a bien été modifié.');
 
+            return $this->redirectToRoute('app_user_edit', [ 'id' => $user->getId()]);
+            */
+
+            $this->addFlash('success', "Vous êtes sur une version de test de Codersaurus Rex. Il n'est donc pas possible de changer le mot de passe du compte de test (sinon plus personne ne pourrait se connecter avec).");
             return $this->redirectToRoute('app_user_edit', [ 'id' => $user->getId()]);
         }
 
