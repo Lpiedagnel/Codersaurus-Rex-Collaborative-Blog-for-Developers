@@ -47,8 +47,8 @@ This project primarily utilizes Symfony 6 along with Bootstrap 5 and SASS to add
 4. Create a database named codersaurus_rex with the utf8mb4_unicode_ci collation.
 
 5. To update the database structure, you have two options:
-    * Import the codersaurus_rex.sql file provided in this repository into your database.
-    * Use `doctrine:migrations:migrate` at the project root to apply migrations. Next, use the command symfony console `doctrine:fixtures:load` to generate test data.
+    * Import the codersaurus_rex.sql file provided in this repository into your database. This solution is faster for testing, but is not secure for a production environment.
+    * Use `doctrine:migrations:migrate` at the project root to apply migrations. Next, use the command symfony console `doctrine:fixtures:load` to generate test data. I recommend this solution if you are using the application in production.
 
 
 6. If you are not using a local server, create a .env.local file by copying the content of .env. Change the `APP_ENV` variable from `dev` to `prod`, update the key in `APP_SECRET`, and ensure the database access in `DATABASE_URL` is accurate.
