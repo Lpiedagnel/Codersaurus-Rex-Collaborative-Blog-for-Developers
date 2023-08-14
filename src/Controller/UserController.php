@@ -89,9 +89,18 @@ class UserController extends AbstractController
 
         $form = $this->createForm(UserType::class, $user, ['required' => true]);
 
+        // Get currentEmail
+        $currentEmail = $user->getEmail();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Check if user want to change mail and prevent it to doing so (Only for test version)
+            if ($form->get('email')->getData() !== $currentEmail) {
+                $this->addFlash('success', "Vous êtes sur une version de test de Codersaurus Rex. Il n'est donc pas possible de changer l'adresse mail du compte de test.");
+                $user->setEmail($currentEmail);
+            }
 
             // Manage upload
             $uploadedFile = $form['avatarFile']->getData();
