@@ -20,7 +20,7 @@ class UserType extends AbstractType
         $builder
         ->add('email', EmailType::class, [
             'attr' => [
-                'disabled' => true
+                'readonly' => true
             ]
         ])
         ->add('username', TextType::class)
