@@ -85,6 +85,7 @@ class ArticleType extends AbstractType
             'attr' => [
                 'placeholder' => 'Entre 40 et 60 caractères'
             ],
+            'required' => false,
             'constraints' => [
                 new Length([
                     'min' => 40,
@@ -98,6 +99,7 @@ class ArticleType extends AbstractType
             'attr' => [
                 'placeholder' => 'Entre 140 et 160 caractères'
             ],
+            'required' => false,
             'constraints' => [
                 new Length([
                     'min' => 140,

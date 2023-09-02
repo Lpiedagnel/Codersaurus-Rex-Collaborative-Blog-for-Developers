@@ -127,50 +127,63 @@
             {% endif %}
         </div>
 
-        {# Meta Title #}
-        <div class="mb-4">
-            {{ form_label(form.meta_title, 'SEO - Meta Title', {
-                label_attr: {
-                    class: 'form-label'
-                }
-            }) }}
-            {{ form_widget(form.meta_title, {
-                attr: {
-                    'class': 'form-control',
-                }
-            }) }}
-            <span class="character-counter">60 caractères restants</span>
-            {{ form_help(form.meta_title, {
-                help_attr: {
-                    class: 'form-text'
-                }
-            }) }}
-            {% if form_errors(form.meta_title) %}
-                <div class="text-danger">{{ form_errors(form.meta_title) }}</div>
-            {% endif %}
-        </div>
+        {# Optionnals fields #}
+        <button class="btn btn-secondary mb-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Champs optionnels
+        </button>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body mb-4">
+                <p>
+                    Les champs ci-dessous servent au référencement de l'article sur les moteurs de recherche comme Google. Il n'est pas obligatoire de les remplir. Si vous les laissez vide, les valeurs sont remplies automatiquement avec le titre de l'article et le résumé.
+                </p>
+            
+                {# Meta Title #}
+                <div class="mb-4">
+                    {{ form_label(form.meta_title, 'SEO - Meta Title', {
+                        label_attr: {
+                            class: 'form-label'
+                        }
+                    }) }}
+                    {{ form_widget(form.meta_title, {
+                        attr: {
+                            'class': 'form-control',
+                        }
+                    }) }}
+                    <span class="character-counter">60 caractères restants</span>
+                    {{ form_help(form.meta_title, {
+                        help_attr: {
+                            class: 'form-text'
+                        }
+                    }) }}
+                    {% if form_errors(form.meta_title) %}
+                        <div class="text-danger">{{ form_errors(form.meta_title) }}</div>
+                    {% endif %}
+                </div>
 
-        {# Meta Description #}
-        <div class="mb-4">
-            {{ form_label(form.meta_description, 'SEO - Meta Description', {
-                label_attr: {
-                    class: 'form-label'
-                }
-            }) }}
-            {{ form_widget(form.meta_description, {
-                attr: {
-                    'class': 'form-control',
-                }
-            }) }}
-            <span class="character-counter">160 caractères restants</span>
-            {{ form_help(form.meta_description, {
-                help_attr: {
-                    class: 'form-text'
-                }
-            }) }}
-            {% if form_errors(form.meta_description) %}
-                <div class="text-danger">{{ form_errors(form.meta_description) }}</div>
-            {% endif %}
+                {# Meta Description #}
+                <div class="mb-4">
+                    {{ form_label(form.meta_description, 'SEO - Meta Description', {
+                        label_attr: {
+                            class: 'form-label'
+                        }
+                    }) }}
+                    {{ form_widget(form.meta_description, {
+                        attr: {
+                            'class': 'form-control',
+                        }
+                    }) }}
+                    <span class="character-counter">160 caractères restants</span>
+                    {{ form_help(form.meta_description, {
+                        help_attr: {
+                            class: 'form-text'
+                        }
+                    }) }}
+                    {% if form_errors(form.meta_description) %}
+                        <div class="text-danger">{{ form_errors(form.meta_description) }}</div>
+                    {% endif %}
+                </div>
+
+            </div>
         </div>
 
         {# Submit #}

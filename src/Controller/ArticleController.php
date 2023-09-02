@@ -64,8 +64,14 @@ class ArticleController extends AbstractController
                 $uploadImageService->handleUpload($form, $article);
             }
 
+            // Manage Meta if empty
+            $metaFields = $this->createMetaIfNull($article, $form);
+            $article->setMetaTitle($metaFields['title']);
+            $article->setMetaDescription($metaFields['description']);
+
             $article->setAuthor($security->getUser());
             $article->setCreatedAt(new \DateTimeImmutable());
+
             $articleRepository->save($article, true);
 
             $this->addFlash('success', "Votre article a bien été soumis ! La rédaction s'occupera de le relire et vous tiendra au courant par Mail !");
@@ -76,6 +82,29 @@ class ArticleController extends AbstractController
             'article' => $article,
             'form' => $form,
         ]);
+    }
+
+    private function createMetaIfNull(Article $article, Form $form): array
+    {
+        $metaTitle = $form['meta_title']->getData();
+        $metaDescription = $form['meta_description']->getData();
+
+        // If meta title is empty
+        if ($metaTitle=== null || empty($metaTitle)) {
+            $metaTitle = $article->getTitle();
+        }   
+
+        // if meta description is empty
+        if ($metaDescription === null || empty($metaDescription)) {
+            $metaDescription = $article->getExtract();
+        }
+
+        $metaFields = [
+            'title' => $metaTitle,
+            'description' => $metaDescription
+        ];
+
+        return $metaFields;
     }
 
     #[Route('/{slug}', name: 'app_article_show', methods: ['GET', 'POST'])]
